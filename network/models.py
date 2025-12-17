@@ -11,24 +11,20 @@ class Post(models.Model):
                                on_delete=models.CASCADE,
                                related_name="posts")
     body = models.TextField()
-    liked_by = models.ForeignKey(User,
-                                 on_delete=models.CASCADE,
-                                 related_name="likes",
-                                 null=True,
-                                 blank=True)
     created_at = models.DateTimeField()
 
 
-class Comment(models.Model):
+class PostLike(models.Model):
     post = models.ForeignKey(Post,
-                             on_delete=models.CASCADE,
-                             related_name="comments")
-    author = models.ForeignKey(User,
-                               on_delete=models.CASCADE,
-                               related_name="comments_made")
-    body = models.TextField()
+                             on_delete=models.CASCADE)
     liked_by = models.ForeignKey(User,
                                  on_delete=models.CASCADE,
-                                 null=True,
-                                 blank=True)
-    created_at = models.DateTimeField()
+                                 related_name='likes')
+
+
+class Follower(models.Model):
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE)
+    followed_by = models.ForeignKey(User,
+                                    on_delete=models.CASCADE,
+                                    related_name="followers")
