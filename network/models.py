@@ -12,6 +12,7 @@ class Post(models.Model):
                                related_name="posts")
     body = models.TextField()
     created_at = models.DateTimeField()
+    edited = models.BooleanField(default=False)
 
 
 class PostLike(models.Model):
