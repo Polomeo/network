@@ -1,5 +1,47 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
-    TODO
+<div id="posts-view">
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <!-- Post -->
+                <div class="card" style="width: 18rem; margin-top: 10px;">
+                    <div class="card-body">
+                        <h5 class="card-title">Username</h5>
+                        <a href="#" class="card-link">Edit</a>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the card's
+                            content.</p>
+                        <h6 class="card-subtitle mb-2 text-muted">Posted at timestamp</h6>
+                        <a href="#" class="card-link">Liked</a>
+                        <a href="#" class="card-link">Comment</a>
+                    </div>
+                </div>
+                <!-- /Post -->
+                <!-- Post -->
+                <div class="card" style="width: 18rem; margin-top: 10px;">
+                    <div class="card-body">
+                        <h5 class="card-title">Username</h5>
+                        <a href="#" class="card-link">Edit</a>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the card's
+                            content.</p>
+                        <h6 class="card-subtitle mb-2 text-muted">Posted at timestamp</h6>
+                        <a href="#" class="card-link">Liked</a>
+                        <a href="#" class="card-link">Comment</a>
+                    </div>
+                </div>
+                <!-- /Post -->
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'network/network.js' %}"></script>
 {% endblock %}
