@@ -1,10 +1,12 @@
+import json
 from django.contrib.auth import authenticate, login, logout
+# TODO from django.core.paginator import Paginator
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Post
 
 
 def index(request):
@@ -61,3 +63,18 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+def load_posts(request, username):
+
+    # Filter posts for username, or return all
+    if username == '':
+        posts = Post.objects.all()
+    else:
+        posts = Post.objects.filter(user=username)
+
+    if len(posts) == 0:
+        return JsonResponse({"no-posts": "There are no post yet."}, status=200)
+    else:
+        posts = posts.order_by("-created_at").all()
+        return JsonResponse([post.serialize() for post in posts], safe=False)
