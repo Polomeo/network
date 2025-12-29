@@ -1,3 +1,8 @@
-.post {
-    margin-top: 5px;
+.card {
+    width: 100px;
+}
+
+.post-container {
+    display: grid;
+
 }
