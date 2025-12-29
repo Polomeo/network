@@ -1,14 +1,3 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // Page sections button listeners
-    // [TODO]
-
-
-    // Load the lastest 10 posts
-    // [TODO]
-    // load_posts();
-
-});
-
 function PostView(props) {
     return (
         <div class="card mb-3">
