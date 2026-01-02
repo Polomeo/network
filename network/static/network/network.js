@@ -1,4 +1,4 @@
-// Post component
+// Post Component
 function PostView(props) {
     return (
         <div class="card mb-3">
@@ -14,19 +14,22 @@ function PostView(props) {
 }
 
 function fetch_posts() {
+
+    let post_components = []
+
     fetch(`/post/all`)
     .then(response => response.json())
     .then(posts => {
-        // Posts
-        console.log(posts);
+        posts.forEach(element => {
+            console.log(element.body);
+            // Create POST Components
+        });
     });
-
 }
 
-
 function App() {
-    
-    fetch_posts()
+
+    fetch_posts();
 
     return (
         <div class="col-md-8">
