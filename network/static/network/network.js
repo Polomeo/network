@@ -5,9 +5,9 @@ function PostView(props) {
             <div class="card-body">
                 <h5 class="card-title">{props.username}</h5>
                 <a href="#">Edit post</a>
-                <h6 class="card-subtitle mb-2 text-muted">timestamp</h6>
+                <h6 class="card-subtitle mb-3 text-muted">{props.created_at}</h6>
                 <p class="card-text">{props.body}</p>
-                <a href="#">{props.likes} likes</a>
+                <a href="#">{props.likes} 0 likes</a>
             </div>
         </div>
     );
@@ -18,7 +18,7 @@ function PostList({posts}) {
     return (
         <div class="col-md-8">
             {posts.map((post) => (
-                <PostView key={post.id} username={post.author} body={post.body}/>
+                <PostView key={post.id} username={post.author} created_at={post.created_at} body={post.body}/>
             ))}
         </div>
     );
@@ -36,18 +36,13 @@ function App() {
             setPosts(data);
             // return posts
             }); 
-   }, []); // Empty dependecy array for preventing infinite loop
+   }, []); // Empty dependecy array for preventing infinite loop by only load once at component rendering
 
-
+   // Using "posts && <PostList... />" to load PostList once posts is succesfully fetched
     return (
         <div>
             {posts && <PostList posts = {posts}/>}
         </div>
-        // <div class="col-md-8">
-        //     <PostView username="Harry" body="Hello world! Going to fight a Dragon!" likes="0"/>
-        //     <PostView username="Ron" body="Viktor Krum is the best!" likes="2"/>
-        //     <PostView username="Hermione" body="Adivination is a very unreliable magic..." likes="5"/>
-        // </div>
     );
 }
 
