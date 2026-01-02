@@ -22,6 +22,10 @@ class Post(models.Model):
             "created_at": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
             "edited": self.edited,
         }
+    
+    def __str__(self):
+        return f"{self.author.username} | {self.body}"
+
 
 
 class PostLike(models.Model):
