@@ -6,37 +6,48 @@ function PostView(props) {
                 <h5 class="card-title">{props.username}</h5>
                 <a href="#">Edit post</a>
                 <h6 class="card-subtitle mb-2 text-muted">timestamp</h6>
-                <p class="card-text">{props.message}</p>
+                <p class="card-text">{props.body}</p>
                 <a href="#">{props.likes} likes</a>
             </div>
         </div>
     );
 }
 
-function fetch_posts() {
-
-    let post_components = []
-
-    fetch(`/post/all`)
-    .then(response => response.json())
-    .then(posts => {
-        posts.forEach(element => {
-            console.log(element.body);
-            // Create POST Components
-        });
-    });
+// Post List Component
+function PostList({posts}) {
+    return (
+        <div class="col-md-8">
+            {posts.map((post) => (
+                <PostView key={post.id} username={post.author} body={post.body}/>
+            ))}
+        </div>
+    );
 }
 
 function App() {
 
-    fetch_posts();
+   const [posts, setPosts] = React.useState(null);
+
+   React.useEffect(() => {
+        fetch(`/post/all`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            setPosts(data);
+            // return posts
+            }); 
+   }, []); // Empty dependecy array for preventing infinite loop
+
 
     return (
-        <div class="col-md-8">
-            <PostView username="Harry" message="Hello world! Going to fight a Dragon!" likes="0"/>
-            <PostView username="Ron" message="Viktor Krum is the best!" likes="2"/>
-            <PostView username="Hermione" message="Adivination is a very unreliable magic..." likes="5"/>
+        <div>
+            {posts && <PostList posts = {posts}/>}
         </div>
+        // <div class="col-md-8">
+        //     <PostView username="Harry" body="Hello world! Going to fight a Dragon!" likes="0"/>
+        //     <PostView username="Ron" body="Viktor Krum is the best!" likes="2"/>
+        //     <PostView username="Hermione" body="Adivination is a very unreliable magic..." likes="5"/>
+        // </div>
     );
 }
 
