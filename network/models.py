@@ -11,8 +11,17 @@ class Post(models.Model):
                                on_delete=models.CASCADE,
                                related_name="posts")
     body = models.TextField()
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)
+
+    def serialize(self):
+        return {
+            "id" : self.id,
+            "author": self.author,
+            "body": self.body,
+            "created_at": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
+            "edited": self.edited,
+        }
 
 
 class PostLike(models.Model):

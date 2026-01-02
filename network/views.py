@@ -71,7 +71,8 @@ def load_posts(request, username):
     if username == '':
         posts = Post.objects.all()
     else:
-        posts = Post.objects.filter(user=username)
+        user = User.objects.get(username=username)
+        posts = Post.objects.filter(author=user.id)
 
     if len(posts) == 0:
         return JsonResponse({"no-posts": "There are no post yet."}, status=200)
