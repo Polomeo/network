@@ -67,6 +67,7 @@ def register(request):
 
 def load_posts(request):
 
+    # Load all posts
     posts = Post.objects.all()
     
     if len(posts) == 0:
@@ -76,4 +77,5 @@ def load_posts(request):
         return JsonResponse([post.serialize() for post in posts], safe=False)
 
 def load_user_posts(request, user_id):
+    # Load user specific posts
     pass
