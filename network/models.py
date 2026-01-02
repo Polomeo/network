@@ -17,9 +17,9 @@ class Post(models.Model):
     def serialize(self):
         return {
             "id" : self.id,
-            "author": self.author,
+            "author": self.author.id,
             "body": self.body,
-            "created_at": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
+            "created_at": self.created_at.strftime("%b %d %Y, %I:%M %p"),
             "edited": self.edited,
         }
     
