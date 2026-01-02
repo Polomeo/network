@@ -13,8 +13,8 @@ function PostView(props) {
     );
 }
 
-function fetch_posts(username) {
-    fetch(`/post/${username}`)
+function fetch_posts() {
+    fetch(`/post/all`)
     .then(response => response.json())
     .then(posts => {
         // Posts
@@ -26,7 +26,7 @@ function fetch_posts(username) {
 
 function App() {
     
-    fetch_posts("sarasa")
+    fetch_posts()
 
     return (
         <div class="col-md-8">

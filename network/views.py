@@ -65,17 +65,15 @@ def register(request):
         return render(request, "network/register.html")
 
 
-def load_posts(request, username):
+def load_posts(request):
 
-    # Filter posts for username, or return all
-    if username == '':
-        posts = Post.objects.all()
-    else:
-        user = User.objects.get(username=username)
-        posts = Post.objects.filter(author=user.id)
-
+    posts = Post.objects.all()
+    
     if len(posts) == 0:
         return JsonResponse({"no-posts": "There are no post yet."}, status=200)
     else:
         posts = posts.order_by("-created_at").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
+
+def load_user_posts(request, user_id):
+    pass
