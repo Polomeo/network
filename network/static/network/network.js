@@ -29,7 +29,7 @@ function PostList(props) {
     // Get all posts
     if(props.author_id) {
         React.useEffect(() => {
-                fetch(`/post/${props.author_id}`)
+                fetch(`/posts/${props.author_id}`)
                 .then(response => response.json())
                 .then(data => {
                     //console.log(data);
@@ -41,7 +41,7 @@ function PostList(props) {
     // Get user specific posts
     else {
         React.useEffect(() => {
-                fetch(`/post/all`)
+                fetch(`/posts/all`)
                 .then(response => response.json())
                 .then(data => {
                     //console.log(data);
@@ -71,10 +71,9 @@ function PostList(props) {
 
 function App() {
 
-   // Using "posts && <PostList... />" to load PostList once posts is succesfully fetched
     return (
         <div>
-            <PostList />
+            <PostList author_id="4"/>
         </div>
     );
 }

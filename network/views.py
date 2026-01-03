@@ -84,4 +84,3 @@ def load_user_posts(request, user_id):
     else:
         posts = posts.order_by("-created_at").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
-    pass
