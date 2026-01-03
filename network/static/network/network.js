@@ -1,4 +1,12 @@
-// Post Component
+//#region VARIABLES
+
+// All posts
+
+
+//#endregion
+
+//#region COMPONENTS
+// POST VIEW COMPONENT
 function PostView(props) {
     return (
         <div class="card mb-3">
@@ -13,7 +21,7 @@ function PostView(props) {
     );
 }
 
-// Post List Component
+// POST LIST COMPONENT
 function PostList({posts}) {
     return (
         <div class="col-md-8">
@@ -24,19 +32,28 @@ function PostList({posts}) {
     );
 }
 
+//#endregion
+
+//#region FUNCTIONS
+
+
+
+//#endregion
+
 function App() {
 
-   const [posts, setPosts] = React.useState(null);
+    // Get all posts
+    const [posts, setPosts] = React.useState(null);
 
-   React.useEffect(() => {
-        fetch(`/post/all`)
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            setPosts(data);
-            // return posts
-            }); 
-   }, []); // Empty dependecy array for preventing infinite loop by only load once at component rendering
+    React.useEffect(() => {
+            fetch(`/post/all`)
+            .then(response => response.json())
+            .then(data => {
+                //console.log(data);
+                setPosts(data);
+                // return posts
+                }); 
+    }, []); // Empty dependecy array for preventing infinite loop by only load once at component rendering
 
    // Using "posts && <PostList... />" to load PostList once posts is succesfully fetched
     return (
@@ -47,3 +64,11 @@ function App() {
 }
 
 ReactDOM.render(<App />, document.querySelector('#app'));
+
+document.addEventListener('DOMContentLoaded', function(){
+    
+    console.log('DOM Content Loaded');
+    
+    // Buttons
+
+});
