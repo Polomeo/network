@@ -22,10 +22,39 @@ function PostView(props) {
 }
 
 // POST LIST COMPONENT
-function PostList({posts}) {
+function PostList(props) {
+
+    const [posts, setPosts] = React.useState(null);
+    
+    // Get all posts
+    if(props.author_id) {
+        React.useEffect(() => {
+                fetch(`/post/${props.author_id}`)
+                .then(response => response.json())
+                .then(data => {
+                    //console.log(data);
+                    setPosts(data);
+                    // return posts
+                    }); 
+        }, []); // Empty dependecy array for preventing infinite loop by only load once at component rendering
+    }
+    // Get user specific posts
+    else {
+        React.useEffect(() => {
+                fetch(`/post/all`)
+                .then(response => response.json())
+                .then(data => {
+                    //console.log(data);
+                    setPosts(data);
+                    // return posts
+                    }); 
+        }, []); // Empty dependecy array for preventing infinite loop by only load once at component rendering
+    }
+
+
     return (
         <div class="col-md-8">
-            {posts.map((post) => (
+            {posts && posts.map((post) => (
                 <PostView key={post.id} username={post.author} created_at={post.created_at} body={post.body}/>
             ))}
         </div>
@@ -42,33 +71,12 @@ function PostList({posts}) {
 
 function App() {
 
-    // Get all posts
-    const [posts, setPosts] = React.useState(null);
-
-    React.useEffect(() => {
-            fetch(`/post/all`)
-            .then(response => response.json())
-            .then(data => {
-                //console.log(data);
-                setPosts(data);
-                // return posts
-                }); 
-    }, []); // Empty dependecy array for preventing infinite loop by only load once at component rendering
-
    // Using "posts && <PostList... />" to load PostList once posts is succesfully fetched
     return (
         <div>
-            {posts && <PostList posts = {posts}/>}
+            <PostList />
         </div>
     );
 }
 
 ReactDOM.render(<App />, document.querySelector('#app'));
-
-document.addEventListener('DOMContentLoaded', function(){
-    
-    console.log('DOM Content Loaded');
-    
-    // Buttons
-
-});
