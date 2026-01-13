@@ -2,12 +2,11 @@
 {% load static %}
 
 {% block body %}
-<div id="posts-view">
-    <div id="app"></div>
-</div>
-<script type="text/babel" src="{% static 'network/network.js' %}"></script>
+<div id="posts-view"></div>
+<div id="profile-view"></div>
+<div id="compose-view"></div>
 {% endblock %}
 
 {% block script %}
-
+<script src="{% static 'network/network.js' %}"></script>
 {% endblock %}

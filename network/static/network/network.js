@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', function () {
 // Utilitary functions
 function show_page(page) {
     // Hide all pages
+    document.querySelector('#posts-view').style.display = 'none';
+    document.querySelector('#profile-view').style.display = 'none';
+    document.querySelector('#compose-view').style.display = 'none';
 
     // Show selected page
     document.querySelector(page).style.display = 'block';
