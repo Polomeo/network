@@ -25,29 +25,29 @@ function PostView(props) {
 function PostList(props) {
 
     const [posts, setPosts] = React.useState(null);
-    
+
     // Get all posts
-    if(props.author_id) {
+    if (props.author_id) {
         React.useEffect(() => {
-                fetch(`/posts/${props.author_id}`)
+            fetch(`/posts/${props.author_id}`)
                 .then(response => response.json())
                 .then(data => {
                     //console.log(data);
                     setPosts(data);
                     // return posts
-                    }); 
+                });
         }, []); // Empty dependecy array for preventing infinite loop by only load once at component rendering
     }
     // Get user specific posts
     else {
         React.useEffect(() => {
-                fetch(`/posts/all`)
+            fetch(`/posts/all`)
                 .then(response => response.json())
                 .then(data => {
                     //console.log(data);
                     setPosts(data);
                     // return posts
-                    }); 
+                });
         }, []); // Empty dependecy array for preventing infinite loop by only load once at component rendering
     }
 
@@ -55,7 +55,7 @@ function PostList(props) {
     return (
         <div class="col-md-8">
             {posts && posts.map((post) => (
-                <PostView key={post.id} username={post.author} created_at={post.created_at} body={post.body}/>
+                <PostView key={post.id} username={post.author} created_at={post.created_at} body={post.body} />
             ))}
         </div>
     );
@@ -73,7 +73,7 @@ function App() {
 
     return (
         <div>
-            <PostList author_id="4"/>
+            <PostList author_id="4" />
         </div>
     );
 }
