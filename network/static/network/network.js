@@ -2,8 +2,23 @@ document.addEventListener('DOMContentLoaded', function () {
     // Navigation Buttons
 
     // Load all posts page
+    load_all_posts();
 
 });
+
+function load_all_posts()
+{
+    const posts_view = document.querySelector('#posts-view');
+
+    posts_view.innerHTML = "<h3>All posts</h3>";
+
+    // Fetch the posts
+    fetch("posts/all", {cache: 'reload'})
+    .then(response => response.json())
+    .then(posts => {
+        console.log(posts);
+    });
+}
 
 // Utilitary functions
 function show_page(page) {
