@@ -1,7 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Navigation Buttons
+    // At first, the user won't be logged in, so this avoids a crashing error of Null
     try {
-        document.querySelector("#user-profile").addEventListener('click', () => load_profile(4));
+        const userIdNumber = document.querySelector("#user-profile").value;
+        console.log(userIdNumber);
+        document.querySelector("#user-profile").addEventListener('click', () => load_profile(Number(userIdNumber)));
     }
     catch(error) {
         console.log("Error getting user-profile link. User not logged in.");
@@ -14,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
+// Load all the posts in the main page
 function load_all_posts()
 {
     const posts_view = document.querySelector('#posts-view');
@@ -50,8 +54,10 @@ function load_all_posts()
     show_page('#posts-view');
 }
 
+// Load user profile with it's own posts in reverse chron. 
 function load_profile(userId){
     const posts_view = document.querySelector('#profile-view');
+    console.log(`User ID: ${userId}`);
     
     
     // Fetch the posts
@@ -90,9 +96,6 @@ function load_profile(userId){
             const loaded_post = createPost(element);
             posts_view.append(loaded_post);
             
-            // Styling
-            post_element.setAttribute('class', 'card mb-3');
-            
         });
     }); 
 
@@ -100,7 +103,7 @@ function load_profile(userId){
     show_page('#profile-view');
 }
 
-// Returns a post div element
+// Returns a div element
 function createPost(args) {
     
     const post_element = document.createElement('div');
@@ -118,7 +121,7 @@ function createPost(args) {
 
 }
 
-// Utilitary functions
+// ---> Utilitary functions
 function show_page(page) {
     // Hide all pages
     document.querySelector('#posts-view').style.display = 'none';
@@ -128,17 +131,3 @@ function show_page(page) {
     // Show selected page
     document.querySelector(page).style.display = 'block';
 }
-
-// function PostView(props) {
-//     return (
-//         <div class="card mb-3">
-//             <div class="card-body">
-//                 <h5 class="card-title">{props.username}</h5>
-//                 <a href="#">Edit post</a>
-//                 <h6 class="card-subtitle mb-3 text-muted">{props.created_at}</h6>
-//                 <p class="card-text">{props.body}</p>
-//                 <a href="#">{props.likes} 0 likes</a>
-//             </div>
-//         </div>
-//     );
-// }
