@@ -31,19 +31,17 @@ function load_all_posts()
         posts.forEach(element => {
             
             // Create the elements
-            const post_element = document.createElement('div');
-            post_element.innerHTML = `<div class="card-body">
-            <h5 class="card-title">${element.author}</h5>
-            <a href="#">Edit post</a>
-            <h6 class="card-subtitle mb-3 text-muted">${element.created_at}</h6>
-            <p class="card-text">${element.body}</p>
-            <a href="#">{props.likes} 0 likes</a>
-            </div>`;
-            posts_view.append(post_element);
-            
-            // Styling
-            post_element.setAttribute('class', 'card mb-3');
-            
+            // const post_element = document.createElement('div');
+            // post_element.innerHTML = `<div class="card-body">
+            // <h5 class="card-title">${element.author}</h5>
+            // <a href="#">Edit post</a>
+            // <h6 class="card-subtitle mb-3 text-muted">${element.created_at}</h6>
+            // <p class="card-text">${element.body}</p>
+            // <a href="#">{props.likes} 0 likes</a>
+            // </div>`;
+            // post_element.setAttribute('class', 'card mb-3');
+            const loaded_post = createPost(element);
+            posts_view.append(loaded_post);         
             
         });
     });
@@ -89,8 +87,8 @@ function load_profile(userId){
             // <a href="#">{props.likes} 0 likes</a>
             // </div>`;
             // posts_view.append(post_element);
-            const card_post = createPost(element);
-            posts_view.append(card_post);
+            const loaded_post = createPost(element);
+            posts_view.append(loaded_post);
             
             // Styling
             post_element.setAttribute('class', 'card mb-3');
