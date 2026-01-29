@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector("#user-profile").addEventListener('click', () => load_profile(Number(userIdNumber)));
     }
     catch(error) {
-        console.log("Error getting user-profile link. User not logged in.");
+        console.log("Error getting user-profile. User not logged in.");
         //console.error(error);
     }
     document.querySelector("#all-posts").addEventListener('click', () => load_all_posts);
@@ -116,6 +116,10 @@ function createPost(args) {
             </div>`;
     // Styling
     post_element.setAttribute('class', 'card mb-3');
+
+    // Hooks
+    const cartTitleElement = post_element.getElementsByClassName("card-title");
+    cartTitleElement[0].addEventListener('click', () => load_profile(args.author.id));
 
     return post_element;
 
