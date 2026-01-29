@@ -119,7 +119,7 @@ function createPost(args) {
 
     // Hooks
     const cartTitleElement = post_element.getElementsByClassName("card-title");
-    cartTitleElement[0].addEventListener('click', () => load_profile(args.author.id));
+    cartTitleElement[0].addEventListener('click', () => load_profile(args.author_id));
 
     return post_element;
 
