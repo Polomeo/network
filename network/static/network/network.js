@@ -4,21 +4,21 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
         const userIdNumber = document.querySelector("#user-profile").value;
         console.log(userIdNumber);
-        document.querySelector("#user-profile").addEventListener('click', () => load_profile(Number(userIdNumber)));
+        document.querySelector("#user-profile").addEventListener('click', () => loadProfile(Number(userIdNumber)));
     }
     catch(error) {
         console.log("Error getting user-profile. User not logged in.");
         //console.error(error);
     }
-    document.querySelector("#all-posts").addEventListener('click', () => load_all_posts);
+    document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
 
     // Load all posts page
-    load_all_posts();
+    loadAllPosts();
 
 });
 
 // Load all the posts in the main page
-function load_all_posts()
+function loadAllPosts()
 {
     const posts_view = document.querySelector('#posts-view');
 
@@ -52,11 +52,11 @@ function load_all_posts()
     });
     
     // Display the all posts page
-    show_page('#posts-view');
+    showPage('#posts-view');
 }
 
 // Load user profile with it's own posts in reverse chron. 
-function load_profile(userId){
+function loadProfile(userId){
     const posts_view = document.querySelector('#profile-view');
 
     // First we clean the contents of the section
@@ -87,17 +87,6 @@ function load_profile(userId){
         
         // Add each post to template
         posts.forEach(element => {
-            
-            // Create the elements
-            // const post_element = document.createElement('div');
-            // post_element.innerHTML = `<div class="card-body">
-            // <h5 class="card-title">${element.author}</h5>
-            // <a href="#">Edit post</a>
-            // <h6 class="card-subtitle mb-3 text-muted">${element.created_at}</h6>
-            // <p class="card-text">${element.body}</p>
-            // <a href="#">{props.likes} 0 likes</a>
-            // </div>`;
-            // posts_view.append(post_element);
             const loaded_post = createPost(element);
             posts_view.append(loaded_post);
             
@@ -105,7 +94,7 @@ function load_profile(userId){
     }); 
 
     // Display profile page
-    show_page('#profile-view');
+    showPage('#profile-view');
 }
 
 // Returns a div element
@@ -124,14 +113,14 @@ function createPost(args) {
 
     // Hooks
     const cartTitleElement = post_element.getElementsByClassName("card-title");
-    cartTitleElement[0].addEventListener('click', () => load_profile(args.author_id));
+    cartTitleElement[0].addEventListener('click', () => loadProfile(args.author_id));
 
     return post_element;
 
 }
 
 // ---> Utilitary functions
-function show_page(page) {
+function showPage(page) {
     // Hide all pages
     document.querySelector('#posts-view').style.display = 'none';
     document.querySelector('#profile-view').style.display = 'none';
