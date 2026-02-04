@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function load_all_posts()
 {
     const posts_view = document.querySelector('#posts-view');
+
     posts_view.innerHTML = "<h3>All posts</h3>";
 
     // Fetch the posts
@@ -57,6 +58,10 @@ function load_all_posts()
 // Load user profile with it's own posts in reverse chron. 
 function load_profile(userId){
     const posts_view = document.querySelector('#profile-view');
+
+    // First we clean the contents of the section
+    posts_view.innerHTML = "";
+
     console.log(`User ID: ${userId}`);
     
     
