@@ -76,6 +76,7 @@ def load_posts(request):
         posts = posts.order_by("-created_at").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
 
+
 def load_user_posts(request, user_id):
     posts = Post.objects.filter(author_id = user_id)
     
@@ -84,3 +85,21 @@ def load_user_posts(request, user_id):
     else:
         posts = posts.order_by("-created_at").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
+
+def new_post(request):
+    # Creating a new post must be done via POST
+    if request.method != "POST":
+        return JsonResponse({"error" : "POST request required"}, status=400)
+
+    # Create Post object and save
+    data = json.loads(request.body)
+
+    post_body = data.get("body", "")
+    new_post = Post(
+        author=request.user,
+        body=post_body
+    )
+    new_post.save()
+    
+    return JsonResponse({"message" : "Post created successfully."}, status=201)
+

@@ -86,7 +86,7 @@ function loadProfile(userId){
     showPage('#profile-view');
 }
 
-// Returns a div element
+// Returns a div element for a post in the database
 function createPost(args) {
     
     const post_element = document.createElement('div');
