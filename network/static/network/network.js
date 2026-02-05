@@ -10,12 +10,19 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("Error getting user-profile. User not logged in.");
         //console.error(error);
     }
-    document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
-
+    
+    // New post form
+    document.querySelector("#new-post-button").addEventListener('click', () => toggleNewPostForm(true));
+    document.querySelector("#cancel-new-post").addEventListener('click', () => toggleNewPostForm(false));
+    toggleNewPostForm(false);
+    
     // Load all posts page
+    document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
     loadAllPosts();
 
 });
+
+/// VIEWING POSTS ///
 
 // Load all the posts in the main page
 function loadAllPosts()
@@ -108,7 +115,21 @@ function createPost(args) {
 
 }
 
-// ---> Utilitary functions
+/// CREATING POSTS ///
+function toggleNewPostForm(visible){
+    if(visible){
+        document.querySelector("#new-post-button").style.display = 'none';
+        document.querySelector("#new-post-form").style.display = 'block';
+        console.log("New post form visible");
+    }
+    else {
+        document.querySelector("#new-post-button").style.display = 'block';
+        document.querySelector("#new-post-form").style.display = 'none';
+        console.log("New post form invisible");
+    }
+}
+
+/// UTILITARY FUNCTIONS ////
 function showPage(page) {
     // Hide all pages
     //document.querySelector('#compose-view').style.display = 'none';

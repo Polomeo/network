@@ -3,12 +3,14 @@
 
 {% block body %}
 <div id="compose-view">
-    <div class="card mb-3">
+    <button id="new-post-button" type="button" class="btn btn-primary">New post</button>
+    <div id="new-post-form" class="card mb-3">
         <div class="card-body">
             <h3>New Post</h3>
             <form id="new-post-form">
                 <textarea class="form-control" id="new-post-body" placeholder="What's on your mind..."></textarea>
                 <input type="submit" class="btn btn-primary" style="margin-top:10px;">
+                <button id="cancel-new-post" type="button" class="btn btn-secondary" style="margin-top:10px;">Cancel</button>
             </form>
         </div>
     </div>
