@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector("#new-post-button").addEventListener('click', () => toggleNewPostForm(true));
     document.querySelector("#cancel-new-post").addEventListener('click', () => toggleNewPostForm(false));
     toggleNewPostForm(false);
+    document.querySelector("#new-post-form").addEventListener('submit', newPost);
     
     // Load all posts page
     document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
@@ -127,6 +128,40 @@ function toggleNewPostForm(visible){
         document.querySelector("#new-post-form").style.display = 'none';
         console.log("New post form invisible");
     }
+}
+
+function newPost(event){
+    console.log('Trying to send post');
+
+    // Prevent automatic reload of the page
+    event.preventDefault();
+
+    // Get the data
+    const post_body = document.querySelector('#new-post-body').value.toString();
+
+    // Try to send the post
+    fetch('/posts/new', {
+        method: 'POST',
+        body : JSON.stringify({
+            body : post_body,
+        })
+    })
+    .then(response => response.json())
+    .then(result => {
+        if(result.error) {
+            console.log('Error: ', result.error);
+        }
+        else {
+            console.log('Result: ', result);
+            // Reloads all posts
+            loadAllPosts();
+            // Hide the form
+            toggleNewPostForm(false);
+        }
+    })
+    .catch(error => {
+        console.log('Error: ', error);
+    });
 }
 
 /// UTILITARY FUNCTIONS ////

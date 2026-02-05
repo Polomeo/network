@@ -1,10 +1,12 @@
 import json
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 # TODO from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Post
 
@@ -86,6 +88,8 @@ def load_user_posts(request, user_id):
         posts = posts.order_by("-created_at").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
 
+@csrf_exempt
+@login_required
 def new_post(request):
     # Creating a new post must be done via POST
     if request.method != "POST":
