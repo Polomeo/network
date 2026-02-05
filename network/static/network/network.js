@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-/// VIEWING POSTS ///
+//#region VIEWING POSTS
 
 // Load all the posts in the main page
 function loadAllPosts()
@@ -116,6 +116,9 @@ function createPost(args) {
 
 }
 
+//#endregion
+
+//#region CREATING POSTS
 /// CREATING POSTS ///
 function toggleNewPostForm(visible){
     if(visible){
@@ -164,7 +167,9 @@ function newPost(event){
     });
 }
 
-/// UTILITARY FUNCTIONS ////
+//#endregion
+
+//#region UTILITARY FUNCTIONS
 function showPage(page) {
     // Hide all pages
     //document.querySelector('#compose-view').style.display = 'none';
@@ -174,3 +179,4 @@ function showPage(page) {
     // Show selected page
     document.querySelector(page).style.display = 'block';
 }
+//#endregion
