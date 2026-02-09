@@ -56,6 +56,9 @@ function loadAllPosts()
     
     // Display the all posts page
     showPage('#posts-view');
+
+    // Display the new post form
+    document.querySelector("#compose-view").style.display = 'block';
 }
 
 // Load user profile with it's own posts in reverse chron. 
@@ -172,13 +175,12 @@ function newPost(event){
         console.log('Error: ', error);
     });
 }
-
 //#endregion
 
 //#region UTILITARY FUNCTIONS
 function showPage(page) {
     // Hide all pages
-    //document.querySelector('#compose-view').style.display = 'none';
+    document.querySelector('#compose-view').style.display = 'none';
     document.querySelector('#posts-view').style.display = 'none';
     document.querySelector('#profile-view').style.display = 'none';
 
