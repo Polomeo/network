@@ -3,6 +3,7 @@
 
 {% block body %}
 <div id="compose-view">
+    {% if user.is_authenticated %}
     <button id="new-post-button" type="button" class="btn btn-primary">New post</button>
     <div id="new-post-form" class="card mb-3">
         <div class="card-body">
@@ -14,6 +15,7 @@
             </form>
         </div>
     </div>
+    {% endif %}
 </div>
 <div id="posts-view"></div>
 <div id="profile-view"></div>

@@ -12,10 +12,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     // New post form
-    document.querySelector("#new-post-button").addEventListener('click', () => toggleNewPostForm(true));
-    document.querySelector("#cancel-new-post").addEventListener('click', () => toggleNewPostForm(false));
-    toggleNewPostForm(false);
-    document.querySelector("#new-post-form").addEventListener('submit', newPost);
+    try {
+        document.querySelector("#new-post-button").addEventListener('click', () => toggleNewPostForm(true));
+        document.querySelector("#cancel-new-post").addEventListener('click', () => toggleNewPostForm(false));
+        toggleNewPostForm(false);
+        document.querySelector("#new-post-form").addEventListener('submit', newPost);
+    }
+    catch(error) {
+        console.log("Error getting new post form. User not logged in.")
+    }
+
     
     // Load all posts page
     document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
