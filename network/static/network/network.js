@@ -63,10 +63,12 @@ function loadAllPosts()
 
 // Load user profile with it's own posts in reverse chron. 
 function loadProfile(userId){
-    const posts_view = document.querySelector('#profile-view');
+    const profile_posts = document.querySelector('#profile-posts');
+    const profile_avatar = document.querySelector('#profile-avatar');
 
-    // First we clean the contents of the section
-    posts_view.innerHTML = "";
+    // First we clean the contents of each section
+    profile_posts.innerHTML = "";
+    profile_avatar.innerHTML = "";
 
     console.log(`User ID: ${userId}`);
     
@@ -83,18 +85,19 @@ function loadProfile(userId){
         if (posts.no_posts) {
             const noPostMessage = document.createElement('h3');
             noPostMessage.innerHTML = "This user has not posted yet."
-            posts_view.insertAdjacentElement('beforeend', noPostMessage);
+            profile_posts.insertAdjacentElement('beforeend', noPostMessage);
             return
         }
 
+        // User name
         const profile_title = document.createElement('h3');
         profile_title.innerHTML = `<h3>${String(posts[0].author).charAt(0).toUpperCase() + String(posts[0].author).slice(1)}'s posts</h3>`;
-        posts_view.append(profile_title);
+        profile_avatar.append(profile_title);
         
         // Add each post to template
         posts.forEach(element => {
             const loaded_post = createPost(element);
-            posts_view.append(loaded_post);
+            profile_posts.append(loaded_post);
             
         });
     }); 

@@ -18,7 +18,12 @@
     {% endif %}
 </div>
 <div id="posts-view"></div>
-<div id="profile-view"></div>
+<div id="profile-view" class="container-fluid">
+    <div class="row">
+        <div id="profile-posts" class="col-8"></div>
+        <div id="profile-avatar" class="col-4 sticky-top"></div>
+    </div>
+</div>
 {% endblock %}
 
 {% block script %}
