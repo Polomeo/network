@@ -72,7 +72,6 @@ function loadProfile(userId){
 
     console.log(`User ID: ${userId}`);
     
-    
     // Fetch the posts
     fetch(`posts/${userId}`, {cache: 'reload'})
     .then(response => response.json())
@@ -90,9 +89,12 @@ function loadProfile(userId){
         }
 
         // User name
-        const profile_title = document.createElement('h3');
-        profile_title.innerHTML = `<h3>${String(posts[0].author).charAt(0).toUpperCase() + String(posts[0].author).slice(1)}'s posts</h3>`;
-        profile_avatar.append(profile_title);
+        // const profile_title = document.createElement('h3');
+        // profile_title.innerHTML = `<h3>${String(posts[0].author).charAt(0).toUpperCase() + String(posts[0].author).slice(1)}</h3>`;
+        // profile_avatar.append(profile_title);
+
+        const profile_content = createAvatar(String(posts[0].author));
+        profile_avatar.append(profile_content);
         
         // Add each post to template
         posts.forEach(element => {
@@ -126,6 +128,22 @@ function createPost(args) {
 
     return post_element;
 
+}
+
+// Returns a div element for the user profile avatar
+function createAvatar(username) {
+    const profile_avatar = document.createElement('div');
+    profile_avatar.innerHTML = `<div class="card-body">
+        <h5 class="card-title">${username.charAt(0).toUpperCase() + username.slice(1)}</h5>
+        <p class="card-text">X followers</p>
+        <p class="card-text">X following</p>
+        <a href="#" class="btn btn-primary">Follow</a>
+    </div>`;
+
+    // Styling
+    profile_avatar.setAttribute('class', 'card text-center w-75 mb-3');
+
+    return profile_avatar
 }
 
 //#endregion
