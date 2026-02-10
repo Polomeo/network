@@ -88,12 +88,7 @@ function loadProfile(userId){
             return
         }
 
-        // User name
-        // const profile_title = document.createElement('h3');
-        // profile_title.innerHTML = `<h3>${String(posts[0].author).charAt(0).toUpperCase() + String(posts[0].author).slice(1)}</h3>`;
-        // profile_avatar.append(profile_title);
-
-        const profile_content = createAvatar(String(posts[0].author));
+        const profile_content = createAvatar(String(posts[0].author), userId);
         profile_avatar.append(profile_content);
         
         // Add each post to template
@@ -106,6 +101,11 @@ function loadProfile(userId){
 
     // Display profile page
     showPage('#profile-view');
+}
+
+// Follows the current user
+function followUser(currentUserId, profileUserId) {
+    console.log("User " + String(currentUserId) + " now follows user " + String(profileUserId));
 }
 
 // Returns a div element for a post in the database
@@ -131,17 +131,30 @@ function createPost(args) {
 }
 
 // Returns a div element for the user profile avatar
-function createAvatar(username) {
+function createAvatar(username, profileUserId) {
     const profile_avatar = document.createElement('div');
     profile_avatar.innerHTML = `<div class="card-body">
         <h5 class="card-title">${username.charAt(0).toUpperCase() + username.slice(1)}</h5>
         <p class="card-text">X followers</p>
         <p class="card-text">X following</p>
-        <a href="#" class="btn btn-primary">Follow</a>
+        <a href="#" class="btn btn-primary" value="${profileUserId}">Follow</a>
     </div>`;
 
     // Styling
     profile_avatar.setAttribute('class', 'card text-center w-75 mb-3');
+
+    // Hooks
+    try {
+        const currentUserId = document.querySelector("#user-profile").value;
+        console.log("Current user ID: " + currentUserId);
+        const followLink = profile_avatar.getElementsByTagName("a");
+        followLink[0].addEventListener('click', () => followUser(Number(currentUserId), profileUserId));
+    }
+    catch (error){
+        // console.log(error);
+        console.log("User not logged in.");
+    }
+
 
     return profile_avatar
 }
