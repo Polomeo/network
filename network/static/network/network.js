@@ -151,8 +151,8 @@ function createAvatar(username, profileUserId) {
         followLink[0].addEventListener('click', () => followUser(Number(currentUserId), profileUserId));
     }
     catch (error){
-        // console.log(error);
         console.log("User not logged in.");
+        // If the user is not logged in, the link goes to the login page.
         profile_avatar.getElementsByTagName("a")[0].setAttribute('href', "/login");
     }
 
