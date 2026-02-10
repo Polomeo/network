@@ -70,7 +70,7 @@ function loadProfile(userId){
     profile_posts.innerHTML = "";
     profile_avatar.innerHTML = "";
 
-    console.log(`User ID: ${userId}`);
+    console.log(`Profile User ID: ${userId}`);
     
     // Fetch the posts
     fetch(`posts/${userId}`, {cache: 'reload'})
@@ -153,6 +153,7 @@ function createAvatar(username, profileUserId) {
     catch (error){
         // console.log(error);
         console.log("User not logged in.");
+        profile_avatar.getElementsByTagName("a")[0].setAttribute('href', "/login");
     }
 
 
