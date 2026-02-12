@@ -61,52 +61,9 @@ function loadAllPosts()
     document.querySelector("#compose-view").style.display = 'block';
 }
 
-// Load user profile with it's own posts in reverse chron. 
-function loadProfile(userId){
-    const profile_posts = document.querySelector('#profile-posts');
-    const profile_avatar = document.querySelector('#profile-avatar');
 
-    // First we clean the contents of each section
-    profile_posts.innerHTML = "";
-    profile_avatar.innerHTML = "";
 
-    console.log(`Profile User ID: ${userId}`);
-    
-    // Fetch the posts
-    fetch(`posts/${userId}`, {cache: 'reload'})
-    .then(response => response.json())
-    .then(posts => {
-        
-        // Log the posts [DEBUG]
-        console.log(posts);
 
-        // If there are no posts
-        if (posts.no_posts) {
-            const noPostMessage = document.createElement('h3');
-            noPostMessage.innerHTML = "This user has not posted yet."
-            profile_posts.insertAdjacentElement('beforeend', noPostMessage);
-            return
-        }
-
-        const profile_content = createAvatar(String(posts[0].author), userId);
-        profile_avatar.append(profile_content);
-        
-        // Add each post to template
-        posts.forEach(element => {
-            const loaded_post = createPost(element);
-            profile_posts.append(loaded_post);
-            
-        });
-    }); 
-
-    // Display profile page
-    showPage('#profile-view');
-}
-
-// Follows the current user
-function followUser(currentUserId, profileUserId) {
-    console.log("User " + String(currentUserId) + " now follows user " + String(profileUserId));
-}
 
 // Returns a div element for a post in the database
 function createPost(args) {
@@ -129,37 +86,6 @@ function createPost(args) {
     return post_element;
 
 }
-
-// Returns a div element for the user profile avatar
-function createAvatar(username, profileUserId) {
-    const profile_avatar = document.createElement('div');
-    profile_avatar.innerHTML = `<div class="card-body">
-        <h5 class="card-title">${username.charAt(0).toUpperCase() + username.slice(1)}</h5>
-        <p class="card-text">X followers</p>
-        <p class="card-text">X following</p>
-        <a href="#" class="btn btn-primary" value="${profileUserId}">Follow</a>
-    </div>`;
-
-    // Styling
-    profile_avatar.setAttribute('class', 'card text-center w-75 mb-3');
-
-    // Hooks
-    try {
-        const currentUserId = document.querySelector("#user-profile").value;
-        console.log("Current user ID: " + currentUserId);
-        const followLink = profile_avatar.getElementsByTagName("a");
-        followLink[0].addEventListener('click', () => followUser(Number(currentUserId), profileUserId));
-    }
-    catch (error){
-        console.log("User not logged in.");
-        // If the user is not logged in, the link goes to the login page.
-        profile_avatar.getElementsByTagName("a")[0].setAttribute('href', "/login");
-    }
-
-
-    return profile_avatar
-}
-
 //#endregion
 
 //#region CREATING POSTS
@@ -212,6 +138,86 @@ function newPost(event){
 }
 //#endregion
 
+//#region USER PROFILE
+// Load user profile with it's own posts in reverse chron. 
+function loadProfile(userId){
+    const profile_posts = document.querySelector('#profile-posts');
+    const profile_avatar = document.querySelector('#profile-avatar');
+    
+    // First we clean the contents of each section
+    profile_posts.innerHTML = "";
+    profile_avatar.innerHTML = "";
+    
+    console.log(`Profile User ID: ${userId}`);
+    
+    // Fetch the posts
+    fetch(`posts/${userId}`, {cache: 'reload'})
+    .then(response => response.json())
+    .then(posts => {
+        
+        // Log the posts [DEBUG]
+        console.log(posts);
+        
+        // If there are no posts
+        if (posts.no_posts) {
+            const noPostMessage = document.createElement('h3');
+            noPostMessage.innerHTML = "This user has not posted yet."
+            profile_posts.insertAdjacentElement('beforeend', noPostMessage);
+            return
+        }
+        
+        const profile_content = createAvatar(String(posts[0].author), userId);
+        profile_avatar.append(profile_content);
+        
+        // Add each post to template
+        posts.forEach(element => {
+            const loaded_post = createPost(element);
+            profile_posts.append(loaded_post);
+            
+        });
+    }); 
+    
+    // Display profile page
+    showPage('#profile-view');
+}
+
+// Follows the current user
+function followUser(currentUserId, profileUserId) {
+    console.log("User " + String(currentUserId) + " now follows user " + String(profileUserId));
+}
+
+// Returns a div element for the user profile avatar
+function createAvatar(username, profileUserId) {
+    const profile_avatar = document.createElement('div');
+    profile_avatar.innerHTML = `<div class="card-body">
+        <h5 class="card-title">${username.charAt(0).toUpperCase() + username.slice(1)}</h5>
+        <p class="card-text">X followers</p>
+        <p class="card-text">X following</p>
+        <a href="#" class="btn btn-primary" value="${profileUserId}">Follow</a>
+    </div>`;
+
+    // Styling
+    profile_avatar.setAttribute('class', 'card text-center w-75 mb-3');
+
+    // Hooks
+    try {
+        const currentUserId = document.querySelector("#user-profile").value;
+        console.log("Current user ID: " + currentUserId);
+        const followLink = profile_avatar.getElementsByTagName("a");
+        followLink[0].addEventListener('click', () => followUser(Number(currentUserId), profileUserId));
+    }
+    catch (error){
+        console.log("User not logged in.");
+        // If the user is not logged in, the link goes to the login page.
+        profile_avatar.getElementsByTagName("a")[0].setAttribute('href', "/login");
+    }
+
+
+    return profile_avatar
+}
+
+
+//#endregion
 //#region UTILITARY FUNCTIONS
 function showPage(page) {
     // Hide all pages
