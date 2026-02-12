@@ -28,7 +28,6 @@ class Post(models.Model):
         return f"{self.author.username} | {self.body}"
 
 
-
 class PostLike(models.Model):
     post = models.ForeignKey(Post,
                              on_delete=models.CASCADE)
@@ -43,3 +42,14 @@ class Follower(models.Model):
     followed_by = models.ForeignKey(User,
                                     on_delete=models.CASCADE,
                                     related_name="followers")
+    
+    def serialize(self):
+        return {
+            "user_id" : self.user.id,
+            "username" : self.user.username,
+            "follower_id" : self.followed_by.id,
+            "follower_username" : self.followed_by.username,
+        }
+
+    def __str__(self):
+        return f"{self.user.username} followed by {self.followed_by.username}"

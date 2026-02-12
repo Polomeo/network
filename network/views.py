@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Post
+from .models import User, Post, Follower
 
 
 def index(request):
@@ -106,4 +106,15 @@ def new_post(request):
     new_post.save()
     
     return JsonResponse({"message" : "Post created successfully."}, status=201)
+
+def following(request, profile_id):
+    # Returns a JSON with a list of followers for profile_id
+    followers = Follower.objects.filter(user = profile_id)
+
+    if len(followers) == 0:
+        return JsonResponse({"no_followers" : "The user has no followers"})
+    else:
+        # followers = followers.order_by("followed_by__user__username").all()
+        print(followers)
+        return JsonResponse([follower.serialize() for follower in followers], safe=False)
 

@@ -61,10 +61,6 @@ function loadAllPosts()
     document.querySelector("#compose-view").style.display = 'block';
 }
 
-
-
-
-
 // Returns a div element for a post in the database
 function createPost(args) {
     
@@ -188,28 +184,64 @@ function followUser(currentUserId, profileUserId) {
 
 // Returns a div element for the user profile avatar
 function createAvatar(username, profileUserId) {
+
+    const currentUserId = 0
+    let userIsFollowing = false;
+    let followerCount = 0;
+
+    try {
+        const currentUserIdValue = document.querySelector("#user-profile").value;
+        currentUserId = Number(currentUserIdValue);
+    }
+    catch(error){
+        console.log("User not logged in.");
+    }
+
     const profile_avatar = document.createElement('div');
     profile_avatar.innerHTML = `<div class="card-body">
         <h5 class="card-title">${username.charAt(0).toUpperCase() + username.slice(1)}</h5>
-        <p class="card-text">X followers</p>
-        <p class="card-text">X following</p>
+        <p class="card-text"><span class="followers">0</span> followers</p>
+        <p class="card-text"><span class="following">0</span> following</p>
         <a href="#" class="btn btn-primary" value="${profileUserId}">Follow</a>
     </div>`;
 
     // Styling
     profile_avatar.setAttribute('class', 'card text-center w-75 mb-3');
 
+    // Get the profile followers
+    fetch(`posts/following/${profileUserId}`)
+    .then(response => response.json())
+    .then(followers => {
+        if (followers.no_followers) {
+            console.log(followers.no_followers);
+        }
+        else {
+            followers.forEach(element => {
+                followerCount++;
+                console.log("Follower count: " + String(followerCount));
+                // Check if the current user already follows this profile
+                if(element['follower_id'] == currentUserId){
+                    userIsFollowing = true;
+                    console.log("The user is already following this profile.");
+                }
+            })
+
+            // Set the followers number
+            console.log("Setting followers number...");
+            profile_avatar.getElementsByClassName("followers")[0].innerHTML = String(followerCount);
+        }
+    });
+
+
     // Hooks
-    try {
-        const currentUserId = document.querySelector("#user-profile").value;
-        console.log("Current user ID: " + currentUserId);
-        const followLink = profile_avatar.getElementsByTagName("a");
-        followLink[0].addEventListener('click', () => followUser(Number(currentUserId), profileUserId));
-    }
-    catch (error){
+    if(currentUserId == 0) {
         console.log("User not logged in.");
         // If the user is not logged in, the link goes to the login page.
         profile_avatar.getElementsByTagName("a")[0].setAttribute('href', "/login");
+    }
+    else {
+        const followLink = profile_avatar.getElementsByTagName("a");
+        followLink[0].addEventListener('click', () => followUser(currentUserId, profileUserId));
     }
 
 
@@ -218,6 +250,7 @@ function createAvatar(username, profileUserId) {
 
 
 //#endregion
+
 //#region UTILITARY FUNCTIONS
 function showPage(page) {
     // Hide all pages
