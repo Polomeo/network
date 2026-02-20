@@ -6,11 +6,11 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log(userIdNumber);
         document.querySelector("#user-profile").addEventListener('click', () => loadProfile(Number(userIdNumber)));
     }
-    catch(error) {
+    catch (error) {
         console.log("Error getting user-profile. User not logged in.");
         //console.error(error);
     }
-    
+
     // New post form
     try {
         document.querySelector("#new-post-button").addEventListener('click', () => toggleNewPostForm(true));
@@ -18,11 +18,11 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleNewPostForm(false);
         document.querySelector("#new-post-form").addEventListener('submit', newPost);
     }
-    catch(error) {
+    catch (error) {
         console.log("Error getting new post form. User not logged in.")
     }
 
-    
+
     // Load all posts page
     document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
     loadAllPosts();
@@ -32,28 +32,27 @@ document.addEventListener('DOMContentLoaded', function () {
 //#region VIEWING POSTS
 
 // Load all the posts in the main page
-function loadAllPosts()
-{
+function loadAllPosts() {
     const posts_view = document.querySelector('#posts-view');
 
     posts_view.innerHTML = "<h3>All posts</h3>";
 
     // Fetch the posts
-    fetch("posts/all", {cache: 'reload'})
-    .then(response => response.json())
-    .then(posts => {
-        
-        // Log the posts [DEBUG]
-        console.log(posts);
-        
-        // Add each post to template
-        posts.forEach(element => {
-            const loaded_post = createPost(element);
-            posts_view.append(loaded_post);         
-            
+    fetch("posts/all", { cache: 'reload' })
+        .then(response => response.json())
+        .then(posts => {
+
+            // Log the posts [DEBUG]
+            console.log(posts);
+
+            // Add each post to template
+            posts.forEach(element => {
+                const loaded_post = createPost(element);
+                posts_view.append(loaded_post);
+
+            });
         });
-    });
-    
+
     // Display the all posts page
     showPage('#posts-view');
 
@@ -63,7 +62,7 @@ function loadAllPosts()
 
 // Returns a div element for a post in the database
 function createPost(args) {
-    
+
     const post_element = document.createElement('div');
     post_element.innerHTML = `<div class="card-body">
             <h5 class="card-title">${args.author}</h5>
@@ -86,8 +85,8 @@ function createPost(args) {
 
 //#region CREATING POSTS
 /// CREATING POSTS ///
-function toggleNewPostForm(visible){
-    if(visible){
+function toggleNewPostForm(visible) {
+    if (visible) {
         document.querySelector("#new-post-button").style.display = 'none';
         document.querySelector("#new-post-form").style.display = 'block';
         console.log("New post form visible");
@@ -99,7 +98,7 @@ function toggleNewPostForm(visible){
     }
 }
 
-function newPost(event){
+function newPost(event) {
     console.log('Trying to send post');
 
     // Prevent automatic reload of the page
@@ -111,68 +110,68 @@ function newPost(event){
     // Try to send the post
     fetch('/posts/new', {
         method: 'POST',
-        body : JSON.stringify({
-            body : post_body,
+        body: JSON.stringify({
+            body: post_body,
         })
     })
-    .then(response => response.json())
-    .then(result => {
-        if(result.error) {
-            console.log('Error: ', result.error);
-        }
-        else {
-            console.log('Result: ', result);
-            // Reloads all posts
-            loadAllPosts();
-            // Hide the form
-            toggleNewPostForm(false);
-        }
-    })
-    .catch(error => {
-        console.log('Error: ', error);
-    });
+        .then(response => response.json())
+        .then(result => {
+            if (result.error) {
+                console.log('Error: ', result.error);
+            }
+            else {
+                console.log('Result: ', result);
+                // Reloads all posts
+                loadAllPosts();
+                // Hide the form
+                toggleNewPostForm(false);
+            }
+        })
+        .catch(error => {
+            console.log('Error: ', error);
+        });
 }
 //#endregion
 
 //#region USER PROFILE
 // Load user profile with it's own posts in reverse chron. 
-function loadProfile(userId){
+function loadProfile(userId) {
     const profile_posts = document.querySelector('#profile-posts');
     const profile_avatar = document.querySelector('#profile-avatar');
-    
+
     // First we clean the contents of each section
     profile_posts.innerHTML = "";
     profile_avatar.innerHTML = "";
-    
+
     console.log(`Profile User ID: ${userId}`);
-    
+
     // Fetch the posts
-    fetch(`posts/${userId}`, {cache: 'reload'})
-    .then(response => response.json())
-    .then(posts => {
-        
-        // Log the posts [DEBUG]
-        console.log(posts);
-        
-        // If there are no posts
-        if (posts.no_posts) {
-            const noPostMessage = document.createElement('h3');
-            noPostMessage.innerHTML = "This user has not posted yet."
-            profile_posts.insertAdjacentElement('beforeend', noPostMessage);
-            return
-        }
-        
-        const profile_content = createAvatar(String(posts[0].author), userId);
-        profile_avatar.append(profile_content);
-        
-        // Add each post to template
-        posts.forEach(element => {
-            const loaded_post = createPost(element);
-            profile_posts.append(loaded_post);
-            
+    fetch(`posts/${userId}`, { cache: 'reload' })
+        .then(response => response.json())
+        .then(posts => {
+
+            // Log the posts [DEBUG]
+            console.log(posts);
+
+            // If there are no posts
+            if (posts.no_posts) {
+                const noPostMessage = document.createElement('h3');
+                noPostMessage.innerHTML = "This user has not posted yet."
+                profile_posts.insertAdjacentElement('beforeend', noPostMessage);
+                return
+            }
+
+            const profile_content = createAvatar(String(posts[0].author), userId);
+            profile_avatar.append(profile_content);
+
+            // Add each post to template
+            posts.forEach(element => {
+                const loaded_post = createPost(element);
+                profile_posts.append(loaded_post);
+
+            });
         });
-    }); 
-    
+
     // Display profile page
     showPage('#profile-view');
 }
@@ -185,7 +184,7 @@ function followUser(currentUserId, profileUserId) {
 // Returns a div element for the user profile avatar
 function createAvatar(username, profileUserId) {
 
-    const currentUserId = 0
+    let currentUserId = 0
     let userIsFollowing = false;
     let followerCount = 0;
 
@@ -193,7 +192,7 @@ function createAvatar(username, profileUserId) {
         const currentUserIdValue = document.querySelector("#user-profile").value;
         currentUserId = Number(currentUserIdValue);
     }
-    catch(error){
+    catch (error) {
         console.log("User not logged in.");
     }
 
@@ -210,31 +209,31 @@ function createAvatar(username, profileUserId) {
 
     // Get the profile followers
     fetch(`posts/following/${profileUserId}`)
-    .then(response => response.json())
-    .then(followers => {
-        if (followers.no_followers) {
-            console.log(followers.no_followers);
-        }
-        else {
-            followers.forEach(element => {
-                followerCount++;
-                console.log("Follower count: " + String(followerCount));
-                // Check if the current user already follows this profile
-                if(element['follower_id'] == currentUserId){
-                    userIsFollowing = true;
-                    console.log("The user is already following this profile.");
-                }
-            })
+        .then(response => response.json())
+        .then(followers => {
+            if (followers.no_followers) {
+                console.log(followers.no_followers);
+            }
+            else {
+                followers.forEach(element => {
+                    followerCount++;
+                    console.log("Follower count: " + String(followerCount));
+                    // Check if the current user already follows this profile
+                    if (element['follower_id'] == currentUserId) {
+                        userIsFollowing = true;
+                        console.log("The user is already following this profile.");
+                    }
+                })
 
-            // Set the followers number
-            console.log("Setting followers number...");
-            profile_avatar.getElementsByClassName("followers")[0].innerHTML = String(followerCount);
-        }
-    });
+                // Set the followers number
+                console.log("Setting followers number...");
+                profile_avatar.getElementsByClassName("followers")[0].innerHTML = String(followerCount);
+            }
+        });
 
 
     // Hooks
-    if(currentUserId == 0) {
+    if (currentUserId == 0) {
         console.log("User not logged in.");
         // If the user is not logged in, the link goes to the login page.
         profile_avatar.getElementsByTagName("a")[0].setAttribute('href', "/login");
