@@ -179,6 +179,7 @@ function loadProfile(userId) {
 // Follows the current user
 function followUser(currentUserId, profileUserId) {
     console.log("User " + String(currentUserId) + " now follows user " + String(profileUserId));
+    
 }
 
 // Returns a div element for the user profile avatar
@@ -205,6 +206,7 @@ function createAvatar(username, profileUserId) {
     </div>`;
 
     // Styling
+    profile_avatar.setAttribute('id', 'profile-avatar');
     profile_avatar.setAttribute('class', 'card text-center w-75 mb-3');
 
     // Get the profile followers
@@ -218,6 +220,7 @@ function createAvatar(username, profileUserId) {
                 followers.forEach(element => {
                     followerCount++;
                     console.log("Follower count: " + String(followerCount));
+                    
                     // Check if the current user already follows this profile
                     if (element['follower_id'] == currentUserId) {
                         userIsFollowing = true;
