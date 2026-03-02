@@ -163,6 +163,7 @@ function loadProfile(userId) {
 
             const profile_content = createAvatar(String(posts[0].author), userId);
             profile_avatar.append(profile_content);
+            updateFollowers(userId);
 
             // Add each post to template
             posts.forEach(element => {
@@ -177,9 +178,8 @@ function loadProfile(userId) {
 }
 
 // Follows the current user
-function followUser(currentUserId, profileUserId) {
-    // console.log("User " + String(currentUserId) + " now follows user " + String(profileUserId));
-    
+function followUser(profileUserId) {
+       
     fetch(`posts/follow/${profileUserId}`, {
         method: 'POST',
     })
@@ -187,18 +187,43 @@ function followUser(currentUserId, profileUserId) {
     .then(result => {
         if(result.followed){
             console.log("User is now following.")
+            updateFollowers(profileUserId);
         }
         else if (result.unfollowed){
             console.log("User is no longer following.")
+            updateFollowers(profileUserId);
         }
     })
     .catch(error => {
         console.log('Error: ', error);
     });
+
 }
 
 // Returns a div element for the user profile avatar
 function createAvatar(username, profileUserId) {
+
+    const profileAvatar = document.createElement('div');
+    profileAvatar.innerHTML = `<div class="card-body">
+        <h5 class="card-title">${username.charAt(0).toUpperCase() + username.slice(1)}</h5>
+        <p class="card-text"><span id="followers" class="followers">0</span> followers</p>
+        <p class="card-text"><span id="following" class="following">0</span> following</p>
+        <a id="follow-link" href="#" class="btn btn-primary" value="${profileUserId}">Follow</a>
+    </div>`;
+
+    // Styling
+    profileAvatar.setAttribute('id', 'profile-avatar');
+    profileAvatar.setAttribute('class', 'card text-center w-75 mb-3');
+
+    // Hook
+    const followLink = profileAvatar.getElementsByTagName("a")[0];
+    followLink.addEventListener('click', () => followUser(profileUserId));
+
+    return profileAvatar
+}
+
+function updateFollowers(profileUserId){
+    // Updates all follower related visuals and checks
 
     let currentUserId = 0
     let userIsFollowing = false;
@@ -212,20 +237,8 @@ function createAvatar(username, profileUserId) {
         console.log("User not logged in.");
     }
 
-    const profile_avatar = document.createElement('div');
-    profile_avatar.innerHTML = `<div class="card-body">
-        <h5 class="card-title">${username.charAt(0).toUpperCase() + username.slice(1)}</h5>
-        <p class="card-text"><span class="followers">0</span> followers</p>
-        <p class="card-text"><span class="following">0</span> following</p>
-        <a href="#" class="btn btn-primary" value="${profileUserId}">Follow</a>
-    </div>`;
-
-    // Styling
-    profile_avatar.setAttribute('id', 'profile-avatar');
-    profile_avatar.setAttribute('class', 'card text-center w-75 mb-3');
-
-    // Get the profile followers
-    fetch(`posts/following/${profileUserId}`)
+    // Fetch the profile followers
+    fetch(`posts/following/${profileUserId}`, {cache: 'reload'})
         .then(response => response.json())
         .then(followers => {
             if (followers.no_followers) {
@@ -242,32 +255,18 @@ function createAvatar(username, profileUserId) {
                         console.log("The user is already following this profile.");
                     }
                 })
-
-                // Set the followers number
-                console.log("Setting followers number...");
-                profile_avatar.getElementsByClassName("followers")[0].innerHTML = String(followerCount);
-
-                // Set the follow button
-                console.log("Setting follow button...");
-                profile_avatar.getElementsByTagName("a")[0].innerHTML = userIsFollowing? "Unfollow" : "Follow"
-
             }
+            // Set the followers number
+            console.log("Setting followers number...");
+            document.querySelector("#followers").innerHTML = String(followerCount);
+            
+            // Set the follow button
+            console.log("Setting follow button...");
+            document.querySelector("#follow-link").innerHTML = userIsFollowing? "Unfollow" : "Follow";
         });
+                
 
 
-    // Hooks
-    if (currentUserId == 0) {
-        console.log("User not logged in.");
-        // If the user is not logged in, the link goes to the login page.
-        profile_avatar.getElementsByTagName("a")[0].setAttribute('href', "/login");
-    }
-    else {
-        const followLink = profile_avatar.getElementsByTagName("a")[0];
-        followLink.addEventListener('click', () => followUser(currentUserId, profileUserId));
-    }
-
-
-    return profile_avatar
 }
 
 
