@@ -118,3 +118,30 @@ def following(request, profile_id):
         print(followers)
         return JsonResponse([follower.serialize() for follower in followers], safe=False)
 
+def follow(request, profile_to_follow_id : int):
+    # If the user is already following, unfollow
+    profile_user = User.objects.get(id = profile_to_follow_id)
+
+    if request.method != "POST":
+        return JsonResponse({
+            "error": "POST method required.",
+        }, status=400)
+    
+    # Check if already following
+    try:
+        follow = Follower.objects.get(user = profile_user, followed_by = request.user)
+        follow.delete()
+        return JsonResponse({
+            "unfollowed" : "User has succesfully unfollow this profile.",
+        }, status=201)
+    
+    # If not, follow
+    except Follower.DoesNotExist:
+        new_follower = Follower(
+            user = profile_user,
+            followed_by = request.user,
+        )
+        new_follower.save()
+        return JsonResponse({
+            "followed" : "User has succesfully follow this profile.",
+        }, status=201)
