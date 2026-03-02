@@ -118,6 +118,8 @@ def following(request, profile_id):
         print(followers)
         return JsonResponse([follower.serialize() for follower in followers], safe=False)
 
+@csrf_exempt
+@login_required
 def follow(request, profile_to_follow_id : int):
     # If the user is already following, unfollow
     profile_user = User.objects.get(id = profile_to_follow_id)

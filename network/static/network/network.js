@@ -178,8 +178,23 @@ function loadProfile(userId) {
 
 // Follows the current user
 function followUser(currentUserId, profileUserId) {
-    console.log("User " + String(currentUserId) + " now follows user " + String(profileUserId));
+    // console.log("User " + String(currentUserId) + " now follows user " + String(profileUserId));
     
+    fetch(`posts/follow/${profileUserId}`, {
+        method: 'POST',
+    })
+    .then(response => response.json())
+    .then(result => {
+        if(result.followed){
+            console.log("User is now following.")
+        }
+        else if (result.unfollowed){
+            console.log("User is no longer following.")
+        }
+    })
+    .catch(error => {
+        console.log('Error: ', error);
+    });
 }
 
 // Returns a div element for the user profile avatar
@@ -231,6 +246,11 @@ function createAvatar(username, profileUserId) {
                 // Set the followers number
                 console.log("Setting followers number...");
                 profile_avatar.getElementsByClassName("followers")[0].innerHTML = String(followerCount);
+
+                // Set the follow button
+                console.log("Setting follow button...");
+                profile_avatar.getElementsByTagName("a")[0].innerHTML = userIsFollowing? "Unfollow" : "Follow"
+
             }
         });
 
@@ -242,8 +262,8 @@ function createAvatar(username, profileUserId) {
         profile_avatar.getElementsByTagName("a")[0].setAttribute('href', "/login");
     }
     else {
-        const followLink = profile_avatar.getElementsByTagName("a");
-        followLink[0].addEventListener('click', () => followUser(currentUserId, profileUserId));
+        const followLink = profile_avatar.getElementsByTagName("a")[0];
+        followLink.addEventListener('click', () => followUser(currentUserId, profileUserId));
     }
 
 
