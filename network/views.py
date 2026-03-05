@@ -107,15 +107,13 @@ def new_post(request):
     
     return JsonResponse({"message" : "Post created successfully."}, status=201)
 
-def following(request, profile_id):
+def followers(request, profile_id):
     # Returns a JSON with a list of followers for profile_id
     followers = Follower.objects.filter(user = profile_id)
 
     if len(followers) == 0:
         return JsonResponse({"no_followers" : "The user has no followers"})
     else:
-        # followers = followers.order_by("followed_by__user__username").all()
-        print(followers)
         return JsonResponse([follower.serialize() for follower in followers], safe=False)
 
 @csrf_exempt

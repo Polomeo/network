@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("Error getting new post form. User not logged in.")
     }
 
-
     // Load all posts page
     document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
     loadAllPosts();
@@ -228,6 +227,7 @@ function updateFollowers(profileUserId){
     let currentUserId = 0
     let userIsFollowing = false;
     let followerCount = 0;
+    let followingCount = 0;
 
     try {
         const currentUserIdValue = document.querySelector("#user-profile").value;
@@ -238,7 +238,7 @@ function updateFollowers(profileUserId){
     }
 
     // Fetch the profile followers
-    fetch(`posts/following/${profileUserId}`, {cache: 'reload'})
+    fetch(`posts/followers/${profileUserId}`, {cache: 'reload'})
         .then(response => response.json())
         .then(followers => {
             if (followers.no_followers) {
