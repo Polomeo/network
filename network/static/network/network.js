@@ -163,6 +163,7 @@ function loadProfile(userId) {
             const profile_content = createAvatar(String(posts[0].author), userId);
             profile_avatar.append(profile_content);
             updateFollowers(userId);
+            updateFollowings(userId);
 
             // Add each post to template
             posts.forEach(element => {
@@ -227,7 +228,6 @@ function updateFollowers(profileUserId){
     let currentUserId = 0
     let userIsFollowing = false;
     let followerCount = 0;
-    let followingCount = 0;
 
     try {
         const currentUserIdValue = document.querySelector("#user-profile").value;
@@ -264,9 +264,29 @@ function updateFollowers(profileUserId){
             console.log("Setting follow button...");
             document.querySelector("#follow-link").innerHTML = userIsFollowing? "Unfollow" : "Follow";
         });
-                
+}
 
+function updateFollowings(profileUserId){
 
+    followingCount = 0;
+
+    fetch(`posts/following/${profileUserId}`, {cache : 'reload'})
+        .then(response => response.json())
+        .then(following => {
+            if (following.no_followings){
+                console.log(following.no_followings);
+            }
+            else {
+                following.forEach(element =>{
+                    followingCount++;
+                    console.log(element);
+                })
+            }
+
+            // Set the following count
+            console.log("Setting following count...");
+            document.querySelector("#following").innerHTML = String(followingCount);
+        });
 }
 
 

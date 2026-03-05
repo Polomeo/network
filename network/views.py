@@ -107,6 +107,8 @@ def new_post(request):
     
     return JsonResponse({"message" : "Post created successfully."}, status=201)
 
+#region FOLLOWERS
+
 def followers(request, profile_id):
     # Returns a JSON with a list of followers for profile_id
     followers = Follower.objects.filter(user = profile_id)
@@ -145,3 +147,15 @@ def follow(request, profile_to_follow_id : int):
         return JsonResponse({
             "followed" : "User has succesfully follow this profile.",
         }, status=201)
+
+#endregion
+
+def following(request, profile_id):
+    # Returns a JSON with a list of followings for profile_id
+
+    followings = Follower.objects.filter(followed_by = profile_id)
+
+    if len(followings) == 0:
+        return JsonResponse({"no_followings" : "No user follows this profile."})
+    else:
+        return JsonResponse([following.serialize() for following in followings], safe=False)
