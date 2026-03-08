@@ -240,7 +240,7 @@ function createAvatar(username, profileUserId) {
     return profileAvatar
 }
 
-function updateFollowers(profileUserId){
+function updateFollowers(profileUserId) {
     // Updates all follower related visuals and checks
 
     let currentUserId = 0
@@ -256,7 +256,7 @@ function updateFollowers(profileUserId){
     }
 
     // Fetch the profile followers
-    fetch(`posts/followers/${profileUserId}`, {cache: 'reload'})
+    fetch(`posts/followers/${profileUserId}`, { cache: 'reload' })
         .then(response => response.json())
         .then(followers => {
             if (followers.no_followers) {
@@ -266,7 +266,7 @@ function updateFollowers(profileUserId){
                 followers.forEach(element => {
                     followerCount++;
                     console.log("Follower count: " + String(followerCount));
-                    
+
                     // Check if the current user already follows this profile
                     if (element['follower_id'] == currentUserId) {
                         userIsFollowing = true;
@@ -277,25 +277,25 @@ function updateFollowers(profileUserId){
             // Set the followers number
             console.log("Setting followers number...");
             document.querySelector("#followers").innerHTML = String(followerCount);
-            
+
             // Set the follow button
             console.log("Setting follow button...");
-            document.querySelector("#follow-link").innerHTML = userIsFollowing? "Unfollow" : "Follow";
+            document.querySelector("#follow-link").innerHTML = userIsFollowing ? "Unfollow" : "Follow";
         });
 }
 
-function updateFollowings(profileUserId){
+function updateFollowings(profileUserId) {
 
     followingCount = 0;
 
-    fetch(`posts/following/${profileUserId}`, {cache : 'reload'})
+    fetch(`posts/following/${profileUserId}`, { cache: 'reload' })
         .then(response => response.json())
         .then(following => {
-            if (following.no_followings){
+            if (following.no_followings) {
                 console.log(following.no_followings);
             }
             else {
-                following.forEach(element =>{
+                following.forEach(element => {
                     followingCount++;
                     console.log(element);
                 })
