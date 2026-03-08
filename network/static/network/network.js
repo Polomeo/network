@@ -310,6 +310,11 @@ function updateFollowings(profileUserId) {
 
 //#endregion
 
+//#region LIKE POST
+
+
+//#endregion
+
 //#region UTILITARY FUNCTIONS
 function showPage(page) {
     // Hide all pages

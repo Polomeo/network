@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Post, Follower
 
-
+#region AUTH VIEWS
 def index(request):
     return render(request, "network/index.html")
 
@@ -65,8 +65,9 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+#endregion
 
-
+#region LOAD AND CREATE POST
 def load_posts(request):
 
     # Load all posts
@@ -77,7 +78,6 @@ def load_posts(request):
     else:
         posts = posts.order_by("-created_at").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
-
 
 def load_user_posts(request, user_id):
     posts = Post.objects.filter(author_id = user_id)
@@ -106,6 +106,8 @@ def new_post(request):
     new_post.save()
     
     return JsonResponse({"message" : "Post created successfully."}, status=201)
+
+#endregion
 
 #region FOLLOWERS
 
@@ -148,7 +150,6 @@ def follow(request, profile_to_follow_id : int):
             "followed" : "User has succesfully follow this profile.",
         }, status=201)
 
-#endregion
 
 def following(request, profile_id):
     # Returns a JSON with a list of followings for profile_id
@@ -159,3 +160,13 @@ def following(request, profile_id):
         return JsonResponse({"no_followings" : "No user follows this profile."})
     else:
         return JsonResponse([following.serialize() for following in followings], safe=False)
+
+#endregion
+
+#region POST LIKES
+@csrf_exempt
+@login_required
+def like_post(request, post_id):
+    pass
+
+#endregion
