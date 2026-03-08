@@ -178,13 +178,31 @@ function loadProfile(userId) {
 }
 
 // Follows the current user
-function followUser(profileUserId) {
+function followUser(event, profileUserId) {
+
+    // Prevents default URL #
+    event.preventDefault();
        
     fetch(`posts/follow/${profileUserId}`, {
         method: 'POST',
     })
-    .then(response => response.json())
+    .then(response => {
+
+        // Since is posible that the response is a redirect to login
+        // we evaluate if it's content-type is HTML
+        const contentTypeResponse = response.headers.get('content-type');
+
+        if (contentTypeResponse.includes('text/html')) {
+            window.location.href = response.url;
+            console.log("Response redirected!");
+            return null;
+        }
+        // Else, return the JSON response normally
+        return response.json();
+    })
     .then(result => {
+        if (!result) return;
+
         if(result.followed){
             console.log("User is now following.")
             updateFollowers(profileUserId);
@@ -217,7 +235,7 @@ function createAvatar(username, profileUserId) {
 
     // Hook
     const followLink = profileAvatar.getElementsByTagName("a")[0];
-    followLink.addEventListener('click', () => followUser(profileUserId));
+    followLink.addEventListener('click', (event) => followUser(event, profileUserId));
 
     return profileAvatar
 }
