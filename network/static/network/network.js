@@ -48,6 +48,7 @@ function loadAllPosts() {
             posts.forEach(element => {
                 const loaded_post = createPost(element);
                 posts_view.append(loaded_post);
+                updatePostLikes(element.id);
 
             });
         });
@@ -68,7 +69,7 @@ function createPost(args) {
             <a href="#">Edit post</a>
             <h6 class="card-subtitle mb-3 text-muted">${args.created_at}</h6>
             <p class="card-text">${args.body}</p>
-            <a href="#" class="like-link">{TO DO -> UPDATE LIKES FUNCTION} 0 likes</a>
+            <a href="#" class="like-link">0</a>
             </div>`;
     // Styling
     post_element.setAttribute('class', 'card mb-3 post-element');
@@ -341,27 +342,11 @@ function likePost(event, postToLikeId) {
 
         if(result.liked){
             console.log("User now likes this post.");
-            getPostLikes(postToLikeId);
-            // const postDivs = document.querySelectorAll(".post-element");
-
-            // postDivs.forEach(element => {
-            //     if (element.dataset.postid == String(postToLikeId)){
-            //         element.getElementsByClassName("like-link")[0].innerHTML = String(likesCount);
-            //         return;
-            //     }
-            // });
+            updatePostLikes(postToLikeId);
         }
         else if (result.unliked){
             console.log("User no longer likes this post.");
-            getPostLikes(postToLikeId);
-            // const postDivs = document.querySelectorAll(".post-element");
-
-            // postDivs.forEach(element => {
-            //     if (element.dataset.postid == String(postToLikeId)){
-            //         element.getElementsByClassName("like-link")[0].innerHTML = String(likesCount);
-            //         return;
-            //     }
-            // });
+            updatePostLikes(postToLikeId);
         }
     })
     .catch(error => {
@@ -369,7 +354,7 @@ function likePost(event, postToLikeId) {
     });
 }
 
-function getPostLikes(postId) {
+function updatePostLikes(postId) {
 
     let likesCount = 0;
 
