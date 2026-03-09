@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Post, Follower
+from .models import User, Post, Follower, PostLike
 
 #region AUTH VIEWS
 def index(request):
@@ -166,7 +166,35 @@ def following(request, profile_id):
 #region POST LIKES
 @csrf_exempt
 @login_required
-def like_post(request, post_id):
-    pass
+def like_post(request, post_id : int):
+
+    # Must be a POST request
+    if request.method != "POST":
+        return JsonResponse({
+            "error": "POST method required.",
+        }, status=400)
+    
+    # If the user is already following, unfollow
+    post_to_like = Post.objects.get(id = post_id)
+    
+    # Check if already likes this post
+    try:
+        post_liked = PostLike.objects.get(post = post_to_like, liked_by = request.user)
+        post_liked.delete()
+        return JsonResponse({
+            "unliked" : "User has succesfully unliked this post.",
+        }, status=201)
+    
+    # If not, like
+    except PostLike.DoesNotExist:
+        new_like = PostLike(
+            post = post_to_like,
+            liked_by = request.user,
+        )
+        new_like.save()
+        return JsonResponse({
+            "liked" : "User has succesfully liked this post.",
+        }, status=201)
+
 
 #endregion

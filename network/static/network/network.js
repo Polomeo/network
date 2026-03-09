@@ -310,7 +310,7 @@ function updateFollowings(profileUserId) {
 
 //#endregion
 
-//#region LIKE POST
+//#region LIKING POSTS
 
 
 //#endregion
