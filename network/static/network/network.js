@@ -68,14 +68,17 @@ function createPost(args) {
             <a href="#">Edit post</a>
             <h6 class="card-subtitle mb-3 text-muted">${args.created_at}</h6>
             <p class="card-text">${args.body}</p>
-            <a href="#">{props.likes} 0 likes</a>
+            <a href="#" class="like-link">{props.likes} 0 likes</a>
             </div>`;
     // Styling
     post_element.setAttribute('class', 'card mb-3');
 
     // Hooks
-    const cartTitleElement = post_element.getElementsByClassName("card-title");
-    cartTitleElement[0].addEventListener('click', () => loadProfile(args.author_id));
+    const cardTitleElement = post_element.getElementsByClassName("card-title");
+    cardTitleElement[0].addEventListener('click', () => loadProfile(args.author_id));
+
+    const likeLink = post_element.getElementsByClassName("like-link");
+    likeLink[0].addEventListener('click', (event) => likePost(event, args.id));
 
     return post_element;
 
@@ -311,7 +314,47 @@ function updateFollowings(profileUserId) {
 //#endregion
 
 //#region LIKING POSTS
+function likePost(event, postToLikeId) {
+    
+    // Prevents default URL #
+    event.preventDefault();
+       
+    fetch(`posts/like/${postToLikeId}`, {
+        method: 'POST',
+    })
+    .then(response => {
 
+        // Since is posible that the response is a redirect to login
+        // we evaluate if it's content-type is HTML
+        const contentTypeResponse = response.headers.get('content-type');
+
+        if (contentTypeResponse.includes('text/html')) {
+            window.location.href = response.url;
+            return null;
+        }
+        // Else, return the JSON response normally
+        return response.json();
+    })
+    .then(result => {
+        if (!result) return;
+
+        if(result.liked){
+            console.log("User now likes this post.")
+            // updateFollowers(profileUserId);
+        }
+        else if (result.unliked){
+            console.log("User no longer likes this post.")
+            // updateFollowers(profileUserId);
+        }
+    })
+    .catch(error => {
+        console.log('Error: ', error);
+    });
+}
+
+function updateLikes(postId){
+
+}
 
 //#endregion
 
