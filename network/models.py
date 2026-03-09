@@ -34,6 +34,15 @@ class PostLike(models.Model):
     liked_by = models.ForeignKey(User,
                                  on_delete=models.CASCADE,
                                  related_name='likes')
+    
+    def serialize(self):
+        return {
+            "post_id" : self.post.id,
+            "liked_by_id" : self.liked_by.id,
+        }
+    
+    def __str__(self):
+        return f"{self.post.id} liked by {self.liked_by.username}"
 
 
 class Follower(models.Model):

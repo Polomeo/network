@@ -71,7 +71,8 @@ function createPost(args) {
             <a href="#" class="like-link">{TO DO -> UPDATE LIKES FUNCTION} 0 likes</a>
             </div>`;
     // Styling
-    post_element.setAttribute('class', 'card mb-3');
+    post_element.setAttribute('class', 'card mb-3 post-element');
+    post_element.setAttribute('data-postid', String(args.id));
 
     // Hooks
     const cardTitleElement = post_element.getElementsByClassName("card-title");
@@ -339,12 +340,28 @@ function likePost(event, postToLikeId) {
         if (!result) return;
 
         if(result.liked){
-            console.log("User now likes this post.")
-            // updateFollowers(profileUserId);
+            console.log("User now likes this post.");
+            getPostLikes(postToLikeId);
+            // const postDivs = document.querySelectorAll(".post-element");
+
+            // postDivs.forEach(element => {
+            //     if (element.dataset.postid == String(postToLikeId)){
+            //         element.getElementsByClassName("like-link")[0].innerHTML = String(likesCount);
+            //         return;
+            //     }
+            // });
         }
         else if (result.unliked){
-            console.log("User no longer likes this post.")
-            // updateFollowers(profileUserId);
+            console.log("User no longer likes this post.");
+            getPostLikes(postToLikeId);
+            // const postDivs = document.querySelectorAll(".post-element");
+
+            // postDivs.forEach(element => {
+            //     if (element.dataset.postid == String(postToLikeId)){
+            //         element.getElementsByClassName("like-link")[0].innerHTML = String(likesCount);
+            //         return;
+            //     }
+            // });
         }
     })
     .catch(error => {
@@ -352,10 +369,35 @@ function likePost(event, postToLikeId) {
     });
 }
 
-function updateLikes(postId){
+function getPostLikes(postId) {
 
+    let likesCount = 0;
+
+    fetch(`posts/get_likes/${postId}`, { cache: 'reload' })
+        .then(response => response.json())
+        .then(likes => {
+            if (likes.no_likes) {
+                console.log(likes.no_likes);
+            }
+            else {
+                likes.forEach(element => {
+                    likesCount++;
+                })
+            }
+
+            console.log("Total likes: " + String(likesCount));
+
+            console.log("Updating post likes...");
+            const postDivs = document.querySelectorAll(".post-element");
+
+            postDivs.forEach(element => {
+                if (element.dataset.postid == String(postId)){
+                    console.log("Post to update likes found");
+                    element.getElementsByClassName("like-link")[0].innerHTML = String(likesCount);
+                }
+            });
+        });
 }
-
 //#endregion
 
 //#region UTILITARY FUNCTIONS

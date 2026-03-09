@@ -196,5 +196,13 @@ def like_post(request, post_id : int):
             "liked" : "User has succesfully liked this post.",
         }, status=201)
 
+def get_post_likes(request, post_id):
+    likes = PostLike.objects.filter(post = post_id)
+
+    if len(likes) == 0:
+        return JsonResponse({"no_likes" : "This post has no likes."})
+    else:
+        return JsonResponse([like.serialize() for like in likes], safe=False)
+
 
 #endregion
