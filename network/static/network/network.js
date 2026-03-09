@@ -68,7 +68,7 @@ function createPost(args) {
             <a href="#">Edit post</a>
             <h6 class="card-subtitle mb-3 text-muted">${args.created_at}</h6>
             <p class="card-text">${args.body}</p>
-            <a href="#" class="like-link">{props.likes} 0 likes</a>
+            <a href="#" class="like-link">{TO DO -> UPDATE LIKES FUNCTION} 0 likes</a>
             </div>`;
     // Styling
     post_element.setAttribute('class', 'card mb-3');
