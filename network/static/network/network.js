@@ -69,7 +69,7 @@ function createPost(args) {
             <a href="#">Edit post</a>
             <h6 class="card-subtitle mb-3 text-muted">${args.created_at}</h6>
             <p class="card-text">${args.body}</p>
-            <a href="#" class="like-link">0</a>
+            <i class="bi bi-heart"></i> <a href="#" class="like-link">0</a>
             </div>`;
     // Styling
     post_element.setAttribute('class', 'card mb-3 post-element');
@@ -357,6 +357,16 @@ function likePost(event, postToLikeId) {
 function updatePostLikes(postId) {
 
     let likesCount = 0;
+    let currentUserId = 0;
+    let userLikesThisPost = false;
+
+    try {
+        const currentUserIdValue = document.querySelector("#user-profile").value;
+        currentUserId = Number(currentUserIdValue);
+    }
+    catch (error) {
+        console.log("User not logged in.");
+    }
 
     fetch(`posts/get_likes/${postId}`, { cache: 'reload' })
         .then(response => response.json())
@@ -367,6 +377,9 @@ function updatePostLikes(postId) {
             else {
                 likes.forEach(element => {
                     likesCount++;
+                    if (element.liked_by_id == currentUserId){
+                        userLikesThisPost = true;
+                    }
                 })
             }
 
@@ -377,8 +390,13 @@ function updatePostLikes(postId) {
 
             postDivs.forEach(element => {
                 if (element.dataset.postid == String(postId)){
-                    console.log("Post to update likes found");
                     element.getElementsByClassName("like-link")[0].innerHTML = String(likesCount);
+                    if (userLikesThisPost){
+                        element.getElementsByTagName("i")[0].setAttribute("style", "color:red;");
+                    }
+                    else{
+                        element.getElementsByTagName("i")[0].removeAttribute("style");
+                    }
                 }
             });
         });
