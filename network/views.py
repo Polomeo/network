@@ -108,6 +108,7 @@ def load_following_posts(request):
         return JsonResponse({"no_posts": "There are not posts here. Try following some profiles!"}, status=200)
     else:
         posts = following_posts.order_by("-created_at").all()
+        print("Posts: " + posts)
         return JsonResponse([post.serialize() for post in posts], safe=False)
 
 @csrf_exempt

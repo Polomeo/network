@@ -64,6 +64,8 @@ function loadAllPosts() {
 function loadFollowingPosts() {
     const following_view = document.querySelector('#following-view');
 
+    console.log("[DEBUG] Start of function loadFollowingPosts");
+
     // USER IS ALREADY LOGGIN IN, SO WE USE request IN VIEW
     // let currentUserId = 0
 
@@ -83,25 +85,25 @@ function loadFollowingPosts() {
 
     // Since is posible that the response is a redirect to login
     // we evaluate if it's content-type is HTML
-    const contentTypeResponse = response.headers.get('content-type');
+        const contentTypeResponse = response.headers.get('content-type');
 
-    if (contentTypeResponse.includes('text/html')) {
-        window.location.href = response.url;
-        return null;
-    }
-    // Else, return the JSON response normally
-    return response.json();
-    })
-    .then(posts => {
+        if (contentTypeResponse.includes('text/html')) {
+            window.location.href = response.url;
+            return null;
+        }
+        // Else, return the JSON response normally
+        return response.json();
+        })
+        .then(posts => {
 
-        // Add each post to template
-        posts.forEach(element => {
-            const loaded_post = createPost(element);
-            following_view.append(loaded_post);
-            updatePostLikes(element.id);
+            // Add each post to template
+            posts.forEach(element => {
+                const loaded_post = createPost(element);
+                following_view.append(loaded_post);
+                updatePostLikes(element.id);
 
+            });
         });
-    });
 
     // Display the all posts page
     showPage('#following-view');
@@ -433,9 +435,6 @@ function updatePostLikes(postId) {
                 })
             }
 
-            console.log("Total likes: " + String(likesCount));
-
-            console.log("Updating post likes...");
             const postDivs = document.querySelectorAll(".post-element");
 
             postDivs.forEach(element => {
