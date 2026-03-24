@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Load all posts page
+    // document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
     document.querySelector("#all-posts").addEventListener('click', loadAllPosts);
     loadAllPosts();
 
@@ -50,9 +51,6 @@ function loadAllPosts() {
         .then(response => response.json())
         .then(posts => {
 
-            // Log the posts [DEBUG]
-            console.log(posts);
-
             // Add each post to template
             posts.forEach(element => {
                 const loaded_post = createPost(element);
@@ -70,7 +68,6 @@ function loadAllPosts() {
 }
 
 function loadFollowingPosts() {
-    console.log("[DEBUG] Start of function loadFollowingPosts");
     const following_view = document.querySelector('#following-view');
 
 
