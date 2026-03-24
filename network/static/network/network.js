@@ -22,10 +22,18 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("Error getting new post form. User not logged in.")
     }
 
+    // Following posts link
+    try {
+        document.querySelector("#following-posts").addEventListener('click', loadFollowingPosts);
+        console.log("[DEBUG] Hook to #following-posts done.");
+    }
+    catch (error) {
+        console.log("Error setting Following Post hook. User not logged in.")
+    }
+
     // Load all posts page
+    document.querySelector("#all-posts").addEventListener('click', loadAllPosts);
     loadAllPosts();
-    document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
-    document.querySelector("#following-posts").addEventListener('click', () => loadFollowingPosts);
 
 });
 
@@ -62,20 +70,9 @@ function loadAllPosts() {
 }
 
 function loadFollowingPosts() {
+    console.log("[DEBUG] Start of function loadFollowingPosts");
     const following_view = document.querySelector('#following-view');
 
-    console.log("[DEBUG] Start of function loadFollowingPosts");
-
-    // USER IS ALREADY LOGGIN IN, SO WE USE request IN VIEW
-    // let currentUserId = 0
-
-    // try {
-    //     const currentUserIdValue = document.querySelector("#user-profile").value;
-    //     currentUserId = Number(currentUserIdValue);
-    // }
-    // catch (error) {
-    //     console.log("User not logged in.");
-    // }
 
     following_view.innerHTML = "<h3>Following posts</h3>";
 
@@ -457,6 +454,7 @@ function showPage(page) {
     // Hide all pages
     document.querySelector('#compose-view').style.display = 'none';
     document.querySelector('#posts-view').style.display = 'none';
+    document.querySelector('#following-view').style.display = 'none';
     document.querySelector('#profile-view').style.display = 'none';
 
     // Show selected page
