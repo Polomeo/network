@@ -23,9 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Load all posts page
+    loadAllPosts();
     document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
     document.querySelector("#following-posts").addEventListener('click', () => loadFollowingPosts);
-    loadAllPosts();
 
 });
 
@@ -424,7 +424,7 @@ function updatePostLikes(postId) {
         .then(response => response.json())
         .then(likes => {
             if (likes.no_likes) {
-                console.log(likes.no_likes);
+                //console.log(likes.no_likes);
             }
             else {
                 likes.forEach(element => {

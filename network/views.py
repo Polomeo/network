@@ -91,24 +91,25 @@ def load_user_posts(request, user_id):
 @login_required
 def load_following_posts(request):
     # posts = Post.objects.filter(author_id in )
-    following_posts = []
 
     # Get the profiles that the user follows
     following = Follower.objects.filter(followed_by = request.user)
+    following_ids = [following_obj.user for following_obj in following]
+    following_posts = Post.objects.filter(author__in = following_ids)
 
     # For each of the followings, get their posts
-    for follow in following:
-        followed_posts = Post.objects.filter(author = follow.user)
+    # for follow in following:
+    #     followed_posts = Post.objects.filter(author = follow.user)
         
-        # For each post this profile has, add it to the list
-        for post in followed_posts:
-            following_posts.append(post)
+    #     # For each post this profile has, add it to the list
+    #     for post in followed_posts:
+    #         following_posts.append(post)
+
     
     if len(following_posts) == 0:
         return JsonResponse({"no_posts": "There are not posts here. Try following some profiles!"}, status=200)
     else:
         posts = following_posts.order_by("-created_at").all()
-        print("Posts: " + posts)
         return JsonResponse([post.serialize() for post in posts], safe=False)
 
 @csrf_exempt
