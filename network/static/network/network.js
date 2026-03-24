@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load all posts page
     document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
+    document.querySelector("#following-posts").addEventListener('click', () => loadFollowingPosts);
     loadAllPosts();
 
 });
@@ -32,9 +33,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Load all the posts in the main page
 function loadAllPosts() {
-    const posts_view = document.querySelector('#posts-view');
+    const following_view = document.querySelector('#posts-view');
 
-    posts_view.innerHTML = "<h3>All posts</h3>";
+    following_view.innerHTML = "<h3>All posts</h3>";
 
     // Fetch the posts
     fetch("posts/all", { cache: 'reload' })
@@ -47,7 +48,7 @@ function loadAllPosts() {
             // Add each post to template
             posts.forEach(element => {
                 const loaded_post = createPost(element);
-                posts_view.append(loaded_post);
+                following_view.append(loaded_post);
                 updatePostLikes(element.id);
 
             });
@@ -58,6 +59,55 @@ function loadAllPosts() {
 
     // Display the new post form
     document.querySelector("#compose-view").style.display = 'block';
+}
+
+function loadFollowingPosts() {
+    const following_view = document.querySelector('#following-view');
+
+    // USER IS ALREADY LOGGIN IN, SO WE USE request IN VIEW
+    // let currentUserId = 0
+
+    // try {
+    //     const currentUserIdValue = document.querySelector("#user-profile").value;
+    //     currentUserId = Number(currentUserIdValue);
+    // }
+    // catch (error) {
+    //     console.log("User not logged in.");
+    // }
+
+    following_view.innerHTML = "<h3>Following posts</h3>";
+
+    // Fetch the posts
+    fetch(`posts/following_posts`, { cache: 'reload' })
+    .then(response => {
+
+    // Since is posible that the response is a redirect to login
+    // we evaluate if it's content-type is HTML
+    const contentTypeResponse = response.headers.get('content-type');
+
+    if (contentTypeResponse.includes('text/html')) {
+        window.location.href = response.url;
+        return null;
+    }
+    // Else, return the JSON response normally
+    return response.json();
+    })
+    .then(posts => {
+
+        // Add each post to template
+        posts.forEach(element => {
+            const loaded_post = createPost(element);
+            following_view.append(loaded_post);
+            updatePostLikes(element.id);
+
+        });
+    });
+
+    // Display the all posts page
+    showPage('#following-view');
+
+    // Display the new post form
+    // document.querySelector("#compose-view").style.display = 'block';
 }
 
 // Returns a div element for a post in the database
