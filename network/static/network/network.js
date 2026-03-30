@@ -4,7 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
         const userIdNumber = document.querySelector("#user-profile").value;
         console.log(userIdNumber);
-        document.querySelector("#user-profile").addEventListener('click', () => loadProfile(Number(userIdNumber)));
+        document.querySelector("#user-profile").addEventListener('click', () => {
+            loadProfile(Number(userIdNumber));
+            history.pushState({id_number : Number(userIdNumber)}, "", `user/${userIdNumber}`);
+        });
     }
     catch (error) {
         console.log("Error getting user-profile. User not logged in.");
@@ -201,7 +204,7 @@ function loadProfile(userId) {
         .then(posts => {
 
             // Log the posts [DEBUG]
-            console.log(posts);
+            // console.log(posts);
 
             // If there are no posts
             if (posts.no_posts) {
