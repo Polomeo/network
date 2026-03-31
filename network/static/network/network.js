@@ -62,12 +62,13 @@ function loadAllPosts() {
 
             });
         });
-
+    
     // Display the all posts page
     showPage('#posts-view');
 
     // Display the new post form
     document.querySelector("#compose-view").style.display = 'block';
+
 }
 
 function loadFollowingPosts() {
