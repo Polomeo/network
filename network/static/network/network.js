@@ -37,20 +37,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load all posts page
     // document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
     document.querySelector("#all-posts").addEventListener('click', loadAllPosts);
-    loadAllPosts();
+    loadAllPosts(1); // Load first page
 
 });
 
 //#region VIEWING POSTS
 
 // Load all the posts in the main page
-function loadAllPosts() {
+function loadAllPosts(page) {
     const following_view = document.querySelector('#posts-view');
 
     following_view.innerHTML = "<h3>All posts</h3>";
 
     // Fetch the posts
-    fetch("posts/all/1", { cache: 'reload' })
+    fetch(`posts/all/${page}`, { cache: 'reload' })
         .then(response => response.json())
         .then(posts => {
 
@@ -73,7 +73,6 @@ function loadAllPosts() {
 
 function loadFollowingPosts() {
     const following_view = document.querySelector('#following-view');
-
 
     following_view.innerHTML = "<h3>Following posts</h3>";
 

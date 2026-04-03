@@ -72,6 +72,7 @@ def load_posts(request, page):
 
     # Load all posts
     posts = Post.objects.all()
+    posts = posts.order_by("-created_at").all()
 
     # Paginate posts
     paginator = Paginator(posts, 5) # 10 post per page
@@ -80,7 +81,6 @@ def load_posts(request, page):
     if len(posts) == 0:
         return JsonResponse({"no-posts": "There are no post yet."}, status=200)
     else:
-        posts = posts.order_by("-created_at").all()
         return JsonResponse([post.serialize() for post in page_results], safe=False)
 
 def load_user_posts(request, user_id):
