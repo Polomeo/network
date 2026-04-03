@@ -224,6 +224,7 @@ function loadProfile(userId) {
             posts.forEach(element => {
                 const loaded_post = createPost(element);
                 profile_posts.append(loaded_post);
+                updatePostLikes(element.id);
 
             });
         });
