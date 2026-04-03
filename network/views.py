@@ -1,7 +1,7 @@
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-# TODO from django.core.paginator import Paginator
+from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -68,16 +68,20 @@ def register(request):
 #endregion
 
 #region LOAD AND CREATE POST
-def load_posts(request):
+def load_posts(request, page):
 
     # Load all posts
     posts = Post.objects.all()
+
+    # Paginate posts
+    paginator = Paginator(posts, 5) # 10 post per page
+    page_results = paginator.get_page(page)
     
     if len(posts) == 0:
         return JsonResponse({"no-posts": "There are no post yet."}, status=200)
     else:
         posts = posts.order_by("-created_at").all()
-        return JsonResponse([post.serialize() for post in posts], safe=False)
+        return JsonResponse([post.serialize() for post in page_results], safe=False)
 
 def load_user_posts(request, user_id):
     posts = Post.objects.filter(author_id = user_id)

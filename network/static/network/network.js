@@ -50,7 +50,7 @@ function loadAllPosts() {
     following_view.innerHTML = "<h3>All posts</h3>";
 
     // Fetch the posts
-    fetch("posts/all", { cache: 'reload' })
+    fetch("posts/all/1", { cache: 'reload' })
         .then(response => response.json())
         .then(posts => {
 
@@ -367,6 +367,11 @@ function updateFollowings(profileUserId) {
 
 
 //#endregion
+
+function showPagination(pageNumber) {
+
+}
+
 
 //#region LIKING POSTS
 function likePost(event, postToLikeId) {
