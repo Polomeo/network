@@ -77,6 +77,13 @@ def load_posts(request, page):
     # Paginate posts
     paginator = Paginator(posts, 5) # 10 post per page
     page_results = paginator.get_page(page)
+
+    page_info = {
+        "has_next_page" : page_results.has_next(),
+        "has_previous_page" : page_results.has_previous(),
+    }
+
+
     
     if len(posts) == 0:
         return JsonResponse({"no-posts": "There are no post yet."}, status=200)

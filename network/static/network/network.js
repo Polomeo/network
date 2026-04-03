@@ -44,13 +44,13 @@ document.addEventListener('DOMContentLoaded', function () {
 //#region VIEWING POSTS
 
 // Load all the posts in the main page
-function loadAllPosts(page) {
+function loadAllPosts(page_number) {
     const following_view = document.querySelector('#posts-view');
 
     following_view.innerHTML = "<h3>All posts</h3>";
 
     // Fetch the posts
-    fetch(`posts/all/${page}`, { cache: 'reload' })
+    fetch(`posts/all/${page_number}`, { cache: 'reload' })
         .then(response => response.json())
         .then(posts => {
 
@@ -91,16 +91,15 @@ function loadFollowingPosts() {
         // Else, return the JSON response normally
         return response.json();
         })
-        .then(posts => {
+    .then(posts => {
+        // Add each post to template
+        posts.forEach(element => {
+            const loaded_post = createPost(element);
+            following_view.append(loaded_post);
+            updatePostLikes(element.id);
 
-            // Add each post to template
-            posts.forEach(element => {
-                const loaded_post = createPost(element);
-                following_view.append(loaded_post);
-                updatePostLikes(element.id);
-
-            });
         });
+    });
 
     // Display the all posts page
     showPage('#following-view');
@@ -367,9 +366,34 @@ function updateFollowings(profileUserId) {
 
 //#endregion
 
-function showPagination(pageNumber) {
+// function displayPagination(pageNumber, api_to_fetch) {
+    
+//     // If there is a page after the actual, show it
+//     // If there is a previous page, show it
+//     // Else, return paginator with no links
 
-}
+//     // Since there are several locations where pagination is posible
+//     // here we fetch the API to assert that there is more than one page.
+
+//     const api_to_fetch = ""
+    
+//     const navigation_element = document.createElement('nav');
+//     navigation_element.innerHTML = `
+//         <ul class="pagination justify-content-center">
+//             <li class="page-item disabled">
+//                 <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+//             </li>
+//             <li class="page-item">
+//                 <a class="page-link" href="#">Next</a>
+//             </li>
+//         </ul>
+//         `;
+    
+//     navigation_element.setAttribute('aria-label', "Pagination");
+
+
+
+// }
 
 
 //#region LIKING POSTS
