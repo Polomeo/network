@@ -179,6 +179,8 @@ function newPost(event) {
                 loadAllPosts();
                 // Hide the form
                 toggleNewPostForm(false);
+                // Set the post body blank
+                document.querySelector('#new-post-body').value = "";
             }
         })
         .catch(error => {
