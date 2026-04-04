@@ -10,6 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Post, Follower, PostLike
 
+PAGINATOR_PAGES : int = 10 # Posts per page
+
 #region AUTH VIEWS
 def index(request):
     return render(request, "network/index.html")
@@ -75,12 +77,12 @@ def load_posts(request, page : int):
     posts = posts.order_by("-created_at").all()
 
     # Paginate posts
-    paginator = Paginator(posts, 5) # 10 post per page
+    paginator = Paginator(posts, PAGINATOR_PAGES) # 10 post per page
     page_results = paginator.get_page(page)
 
     # Post page serialization
-    page_body = []
-    page_body = [post.serialize() for post in page_results]
+    # page_body = []
+    # page_body = [post.serialize() for post in page_results]
 
     page_info = {
         "current_page" : page,

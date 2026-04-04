@@ -83,16 +83,16 @@ function loadAllPosts(event, page_number) {
             const paginator = document.getElementById("paginator");
 
             if (data.page_info.has_previous_page === true) {
-                console.log("Has previous page")
+                // console.log("Has previous page");
                 paginator.getElementsByTagName("a")[0].addEventListener("click", (e) => loadAllPosts(e, page_number - 1));
-                console.log(`Set Hook to loadAllPost(${page_number - 1})`);
+                // console.log(`Set Hook to loadAllPost(${page_number - 1})`);
             }
                 
             // Next page link
             if (data.page_info.has_next_page === true) {
-                console.log("Has next page")
+                // console.log("Has next page");
                 paginator.getElementsByTagName("a")[1].addEventListener("click", (e) => loadAllPosts(e, page_number + 1));
-                console.log(`Set Hook to loadAllPost(${page_number + 1})`);
+                // console.log(`Set Hook to loadAllPost(${page_number + 1})`);
             }
 
         });
@@ -433,10 +433,6 @@ function displayPagination(hasNext, hasPrev) {
         navigation_element.getElementsByClassName("page-item")[1].setAttribute("tabindex", "-1");
         navigation_element.getElementsByClassName("page-item")[1].setAttribute("class", "page-item disabled");
     } 
-    
-    // Else, return paginator with no links
-
-
 
     return navigation_element;
 
