@@ -87,16 +87,15 @@ def load_posts(request, page : int):
         "has_next_page" : page_results.has_next(),
         "has_previous_page" : page_results.has_previous(),
     }
-
-
     
     if len(posts) == 0:
         return JsonResponse({"no-posts": "There are no post yet."}, status=200)
     else:
         # return JsonResponse([post.serialize() for post in page_results], safe=False)
-        print(f"page_info: {page_info}")
-        print(f"page_body = {page_body}")
-        return JsonResponse({"page_body": [post.serialize() for post in page_results.object_list], "page_info" : page_info}, safe=False)
+        # print(f"page_info: {page_info}")
+        # print(f"page_body = {page_body}")
+        return JsonResponse({"page_body": [post.serialize() for post in page_results.object_list], 
+                             "page_info" : page_info}, safe=False)
 
 def load_user_posts(request, user_id):
     posts = Post.objects.filter(author_id = user_id)

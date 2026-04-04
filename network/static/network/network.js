@@ -1,9 +1,9 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function (event) {
     // Navigation Buttons
     // At first, the user won't be logged in, so this avoids a crashing error of Null
     try {
         const userIdNumber = document.querySelector("#user-profile").value;
-        console.log(userIdNumber);
+        // console.log(userIdNumber);
         document.querySelector("#user-profile").addEventListener('click', () => {
             loadProfile(Number(userIdNumber));
             // history.pushState({id_number : Number(userIdNumber)}, "", `user/${userIdNumber}`);
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Following posts link
     try {
         document.querySelector("#following-posts").addEventListener('click', loadFollowingPosts);
-        console.log("[DEBUG] Hook to #following-posts done.");
+        // console.log("[DEBUG] Hook to #following-posts done.");
     }
     catch (error) {
         console.log("Error setting Following Post hook. User not logged in.")
@@ -36,15 +36,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load all posts page
     // document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
-    document.querySelector("#all-posts").addEventListener('click', loadAllPosts);
-    loadAllPosts(1); // Load first page
+    document.querySelector("#all-posts").addEventListener("click", (e) => {loadAllPosts(e, 1)});
+    loadAllPosts(event, 1); // Load first page
+    // console.log("Loadding page 1")
 
 });
 
 //#region VIEWING POSTS
 
 // Load all the posts in the main page
-function loadAllPosts(page_number) {
+function loadAllPosts(event, page_number) {
+
+    if(event === "click"){
+        event.preventDefault();
+        console.log("prevenido default!")
+    }
+
     const following_view = document.querySelector('#posts-view');
 
     following_view.innerHTML = "<h3>All posts</h3>";
@@ -54,8 +61,8 @@ function loadAllPosts(page_number) {
         .then(response => response.json())
         .then(data => {
 
-            console.log(data.page_info);
-            console.log(data.page_body);
+            // console.log(data.page_info);
+            // console.log(data.page_body);
 
             // Add each post to template
             data.page_body.forEach(element => {
@@ -66,8 +73,28 @@ function loadAllPosts(page_number) {
             });
             
             // Append navigation
-            const navigation_links = displayPagination('posts/all/', page_number, data.page_info.has_next_page, data.page_info.has_previous_page);
+            const navigation_links = displayPagination(data.page_info.has_next_page, data.page_info.has_previous_page);
+            
             following_view.append(navigation_links);
+            
+            // Previous page link
+            console.log(data.page_info.has_previous_page);
+
+            const paginator = document.getElementById("paginator");
+
+            if (data.page_info.has_previous_page === true) {
+                console.log("Has previous page")
+                paginator.getElementsByTagName("a")[0].addEventListener("click", (e) => loadAllPosts(e, page_number - 1));
+                console.log(`Set Hook to loadAllPost(${page_number - 1})`);
+            }
+                
+            // Next page link
+            if (data.page_info.has_next_page === true) {
+                console.log("Has next page")
+                paginator.getElementsByTagName("a")[1].addEventListener("click", (e) => loadAllPosts(e, page_number + 1));
+                console.log(`Set Hook to loadAllPost(${page_number + 1})`);
+            }
+
         });
     
     // Display the all posts page
@@ -379,12 +406,7 @@ function updateFollowings(profileUserId) {
 
 //#endregion
 
-function displayPagination(url_to_fetch, currentPageNumber, hasNext, hasPrev) {
-    
-    // Since there are several locations where pagination is posible
-    // here we fetch the API to assert that there is more than one page.
-
-    const url = url_to_fetch
+function displayPagination(hasNext, hasPrev) {
     
     const navigation_element = document.createElement('nav');
     navigation_element.innerHTML = `
@@ -399,12 +421,25 @@ function displayPagination(url_to_fetch, currentPageNumber, hasNext, hasPrev) {
         `;
     
     navigation_element.setAttribute('aria-label', "Pagination");
+    navigation_element.setAttribute('id', "paginator");
+
+    // If has no prev page, disable the button
+    if (!hasPrev) {
+        navigation_element.getElementsByClassName("page-item")[0].setAttribute("tabindex", "-1");
+        navigation_element.getElementsByClassName("page-item")[0].setAttribute("class", "page-item disabled");
+    }
+    // If has no next page, disable the button
+    if (!hasNext) {
+        navigation_element.getElementsByClassName("page-item")[1].setAttribute("tabindex", "-1");
+        navigation_element.getElementsByClassName("page-item")[1].setAttribute("class", "page-item disabled");
+    } 
+    
+    // Else, return paginator with no links
+
+
 
     return navigation_element;
 
-    // If there is a page after the actual, show it
-    // If there is a previous page, show it
-    // Else, return paginator with no links
 
 
 
