@@ -64,10 +64,15 @@ function loadAllPosts(page_number) {
                 updatePostLikes(element.id);
 
             });
+            
+            // Append navigation
+            const navigation_links = displayPagination('posts/all/', page_number, data.page_info.has_next_page, data.page_info.has_previous_page);
+            following_view.append(navigation_links);
         });
     
     // Display the all posts page
     showPage('#posts-view');
+
 
     // Display the new post form
     document.querySelector("#compose-view").style.display = 'block';
@@ -94,14 +99,19 @@ function loadFollowingPosts() {
         // Else, return the JSON response normally
         return response.json();
         })
-    .then(posts => {
-        // Add each post to template
-        posts.forEach(element => {
-            const loaded_post = createPost(element);
-            following_view.append(loaded_post);
-            updatePostLikes(element.id);
+    .then(data => {
+        
+        if (data.no_posts){
+            console.log("No posts to show.");
 
-        });
+        } else {
+            // Add each post to template
+            data.forEach(element => {
+                const loaded_post = createPost(element);
+                following_view.append(loaded_post);
+                updatePostLikes(element.id);
+                })
+        };
     });
 
     // Display the all posts page
@@ -369,34 +379,36 @@ function updateFollowings(profileUserId) {
 
 //#endregion
 
-// function displayPagination(pageNumber, api_to_fetch) {
+function displayPagination(url_to_fetch, currentPageNumber, hasNext, hasPrev) {
     
-//     // If there is a page after the actual, show it
-//     // If there is a previous page, show it
-//     // Else, return paginator with no links
+    // Since there are several locations where pagination is posible
+    // here we fetch the API to assert that there is more than one page.
 
-//     // Since there are several locations where pagination is posible
-//     // here we fetch the API to assert that there is more than one page.
-
-//     const api_to_fetch = ""
+    const url = url_to_fetch
     
-//     const navigation_element = document.createElement('nav');
-//     navigation_element.innerHTML = `
-//         <ul class="pagination justify-content-center">
-//             <li class="page-item disabled">
-//                 <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-//             </li>
-//             <li class="page-item">
-//                 <a class="page-link" href="#">Next</a>
-//             </li>
-//         </ul>
-//         `;
+    const navigation_element = document.createElement('nav');
+    navigation_element.innerHTML = `
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#">Previous</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+        `;
     
-//     navigation_element.setAttribute('aria-label', "Pagination");
+    navigation_element.setAttribute('aria-label', "Pagination");
+
+    return navigation_element;
+
+    // If there is a page after the actual, show it
+    // If there is a previous page, show it
+    // Else, return paginator with no links
 
 
 
-// }
+}
 
 
 //#region LIKING POSTS
