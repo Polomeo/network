@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log(userIdNumber);
         document.querySelector("#user-profile").addEventListener('click', () => {
             loadProfile(Number(userIdNumber));
-            history.pushState({id_number : Number(userIdNumber)}, "", `user/${userIdNumber}`);
+            // history.pushState({id_number : Number(userIdNumber)}, "", `user/${userIdNumber}`);
         });
     }
     catch (error) {
@@ -52,10 +52,13 @@ function loadAllPosts(page_number) {
     // Fetch the posts
     fetch(`posts/all/${page_number}`, { cache: 'reload' })
         .then(response => response.json())
-        .then(posts => {
+        .then(data => {
+
+            console.log(data.page_info);
+            console.log(data.page_body);
 
             // Add each post to template
-            posts.forEach(element => {
+            data.page_body.forEach(element => {
                 const loaded_post = createPost(element);
                 following_view.append(loaded_post);
                 updatePostLikes(element.id);
