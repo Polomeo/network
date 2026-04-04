@@ -93,20 +93,29 @@ def load_posts(request, page : int):
     if len(posts) == 0:
         return JsonResponse({"no-posts": "There are no post yet."}, status=200)
     else:
-        # return JsonResponse([post.serialize() for post in page_results], safe=False)
-        # print(f"page_info: {page_info}")
-        # print(f"page_body = {page_body}")
         return JsonResponse({"page_body": [post.serialize() for post in page_results.object_list], 
                              "page_info" : page_info}, safe=False)
 
-def load_user_posts(request, user_id):
+def load_user_posts(request, user_id: int, page: int):
+    
     posts = Post.objects.filter(author_id = user_id)
+    posts = posts.order_by("-created_at").all()
+
+     # Paginate posts
+    paginator = Paginator(posts, PAGINATOR_PAGES) # 10 post per page
+    page_results = paginator.get_page(page)
+
+    page_info = {
+        "current_page" : page,
+        "has_next_page" : page_results.has_next(),
+        "has_previous_page" : page_results.has_previous(),
+    }
     
     if len(posts) == 0:
         return JsonResponse({"no_posts": "There are no post yet."}, status=200)
     else:
-        posts = posts.order_by("-created_at").all()
-        return JsonResponse([post.serialize() for post in posts], safe=False)
+        return JsonResponse({"page_body": [post.serialize() for post in page_results.object_list], 
+                             "page_info" : page_info}, safe=False)
 
 @login_required
 def load_following_posts(request):

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
         const userIdNumber = document.querySelector("#user-profile").value;
         // console.log(userIdNumber);
         document.querySelector("#user-profile").addEventListener('click', () => {
-            loadProfile(Number(userIdNumber));
+            loadProfile(Number(userIdNumber), 1);
             // history.pushState({id_number : Number(userIdNumber)}, "", `user/${userIdNumber}`);
         });
     }
@@ -165,7 +165,7 @@ function createPost(args) {
 
     // Hooks
     const cardTitleElement = post_element.getElementsByClassName("card-title");
-    cardTitleElement[0].addEventListener('click', () => loadProfile(args.author_id));
+    cardTitleElement[0].addEventListener('click', () => loadProfile(args.author_id, 1));
 
     const likeLink = post_element.getElementsByClassName("like-link");
     likeLink[0].addEventListener('click', (event) => likePost(event, args.id));
@@ -229,7 +229,7 @@ function newPost(event) {
 
 //#region USER PROFILE
 // Load user profile with it's own posts in reverse chron. 
-function loadProfile(userId) {
+function loadProfile(userId, profile_page) {
     const profile_posts = document.querySelector('#profile-posts');
     const profile_avatar = document.querySelector('#profile-avatar');
 
@@ -240,32 +240,31 @@ function loadProfile(userId) {
     console.log(`Profile User ID: ${userId}`);
 
     // Fetch the posts
-    fetch(`posts/${userId}`, { cache: 'reload' })
+    fetch(`posts/${userId}/${profile_page}`, { cache: 'reload' })
         .then(response => response.json())
-        .then(posts => {
+        .then(data => {
 
             // Log the posts [DEBUG]
             // console.log(posts);
 
             // If there are no posts
-            if (posts.no_posts) {
+            if (data.no_posts) {
                 const noPostMessage = document.createElement('h3');
                 noPostMessage.innerHTML = "This user has not posted yet."
                 profile_posts.insertAdjacentElement('beforeend', noPostMessage);
                 return
             }
 
-            const profile_content = createAvatar(String(posts[0].author), userId);
+            const profile_content = createAvatar(String(data.page_body[0].author), userId);
             profile_avatar.append(profile_content);
             updateFollowers(userId);
             updateFollowings(userId);
 
             // Add each post to template
-            posts.forEach(element => {
+            data.page_body.forEach(element => {
                 const loaded_post = createPost(element);
                 profile_posts.append(loaded_post);
                 updatePostLikes(element.id);
-
             });
         });
 
