@@ -268,6 +268,8 @@ function loadProfile(event, userId, profile_page) {
                 profile_posts.append(loaded_post);
                 updatePostLikes(element.id);
             });
+
+            // TODO: Add Pagination (same as loadAllPosts)
         });
 
     // Display profile page
