@@ -10,9 +10,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Post, Follower, PostLike
 
-PAGINATOR_PAGES : int = 10 # Posts per page
+PAGINATOR_PAGES: int = 10  # Posts per page
 
-#region AUTH VIEWS
+# region AUTH VIEWS
+
+
 def index(request):
     return render(request, "network/index.html")
 
@@ -67,17 +69,19 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
-#endregion
+# endregion
 
-#region LOAD AND CREATE POST
-def load_posts(request, page : int):
+# region LOAD AND CREATE POST
+
+
+def load_posts(request, page: int):
 
     # Load all posts
     posts = Post.objects.all()
     posts = posts.order_by("-created_at").all()
 
     # Paginate posts
-    paginator = Paginator(posts, PAGINATOR_PAGES) # 10 post per page
+    paginator = Paginator(posts, PAGINATOR_PAGES)  # 10 post per page
     page_results = paginator.get_page(page)
 
     # Post page serialization
@@ -85,46 +89,48 @@ def load_posts(request, page : int):
     # page_body = [post.serialize() for post in page_results]
 
     page_info = {
-        "current_page" : page,
-        "has_next_page" : page_results.has_next(),
-        "has_previous_page" : page_results.has_previous(),
+        "current_page": page,
+        "has_next_page": page_results.has_next(),
+        "has_previous_page": page_results.has_previous(),
     }
-    
+
     if len(posts) == 0:
         return JsonResponse({"no-posts": "There are no post yet."}, status=200)
     else:
-        return JsonResponse({"page_body": [post.serialize() for post in page_results.object_list], 
-                             "page_info" : page_info}, safe=False)
+        return JsonResponse({"page_body": [post.serialize() for post in page_results.object_list],
+                             "page_info": page_info}, safe=False)
+
 
 def load_user_posts(request, user_id: int, page: int):
-    
-    posts = Post.objects.filter(author_id = user_id)
+
+    posts = Post.objects.filter(author_id=user_id)
     posts = posts.order_by("-created_at").all()
 
-     # Paginate posts
-    paginator = Paginator(posts, PAGINATOR_PAGES) # 10 post per page
+    # Paginate posts
+    paginator = Paginator(posts, PAGINATOR_PAGES)  # 10 post per page
     page_results = paginator.get_page(page)
 
     page_info = {
-        "current_page" : page,
-        "has_next_page" : page_results.has_next(),
-        "has_previous_page" : page_results.has_previous(),
+        "current_page": page,
+        "has_next_page": page_results.has_next(),
+        "has_previous_page": page_results.has_previous(),
     }
-    
+
     if len(posts) == 0:
         return JsonResponse({"no_posts": "There are no post yet."}, status=200)
     else:
-        return JsonResponse({"page_body": [post.serialize() for post in page_results.object_list], 
-                             "page_info" : page_info}, safe=False)
+        return JsonResponse({"page_body": [post.serialize() for post in page_results.object_list],
+                             "page_info": page_info}, safe=False)
+
 
 @login_required
 def load_following_posts(request):
 
     # Get the profiles that the user follows
-    following = Follower.objects.filter(followed_by = request.user)
+    following = Follower.objects.filter(followed_by=request.user)
     # Get the posts made by those profiles
     following_users = [following_obj.user for following_obj in following]
-    following_posts = Post.objects.filter(author__in = following_users)
+    following_posts = Post.objects.filter(author__in=following_users)
 
     if len(following_posts) == 0:
         return JsonResponse({"no_posts": "There are not posts here. Try following some profiles!"}, status=200)
@@ -132,12 +138,13 @@ def load_following_posts(request):
         posts = following_posts.order_by("-created_at").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
 
+
 @csrf_exempt
 @login_required
 def new_post(request):
     # Creating a new post must be done via POST
     if request.method != "POST":
-        return JsonResponse({"error" : "POST request required"}, status=400)
+        return JsonResponse({"error": "POST request required"}, status=400)
 
     # Create Post object and save
     data = json.loads(request.body)
@@ -148,105 +155,118 @@ def new_post(request):
         body=post_body
     )
     new_post.save()
-    
-    return JsonResponse({"message" : "Post created successfully."}, status=201)
 
-#endregion
+    return JsonResponse({"message": "Post created successfully."}, status=201)
 
-#region FOLLOWERS
+# endregion
+
+# region FOLLOWERS
+
 
 def followers(request, profile_id):
     # Returns a JSON with a list of followers for profile_id
-    followers = Follower.objects.filter(user = profile_id)
+    followers = Follower.objects.filter(user=profile_id)
 
     if len(followers) == 0:
-        return JsonResponse({"no_followers" : "The user has no followers"})
+        return JsonResponse({"no_followers": "The user has no followers"})
     else:
         return JsonResponse([follower.serialize() for follower in followers], safe=False)
 
+
 @csrf_exempt
 @login_required
-def follow(request, profile_to_follow_id : int):
+def follow(request, profile_to_follow_id: int):
     # If the user is already following, unfollow
-    profile_user = User.objects.get(id = profile_to_follow_id)
+    profile_user = User.objects.get(id=profile_to_follow_id)
 
     if request.method != "POST":
         return JsonResponse({
             "error": "POST method required.",
         }, status=400)
-    
+
+    # Prevent user to follow itself
+    if profile_to_follow_id == request.user.id:
+        return JsonResponse({
+            "error": "Can't follow oneself.",
+        }, status=400)
+
     # Check if already following
     try:
-        follow = Follower.objects.get(user = profile_user, followed_by = request.user)
+        follow = Follower.objects.get(
+            user=profile_user, followed_by=request.user)
         follow.delete()
         return JsonResponse({
-            "unfollowed" : "User has succesfully unfollow this profile.",
+            "unfollowed": "User has succesfully unfollow this profile.",
         }, status=201)
-    
+
     # If not, follow
     except Follower.DoesNotExist:
         new_follower = Follower(
-            user = profile_user,
-            followed_by = request.user,
+            user=profile_user,
+            followed_by=request.user,
         )
         new_follower.save()
         return JsonResponse({
-            "followed" : "User has succesfully follow this profile.",
+            "followed": "User has succesfully follow this profile.",
         }, status=201)
 
 
 def following(request, profile_id):
     # Returns a JSON with a list of followings for profile_id
 
-    followings = Follower.objects.filter(followed_by = profile_id)
+    followings = Follower.objects.filter(followed_by=profile_id)
 
     if len(followings) == 0:
-        return JsonResponse({"no_followings" : "No user follows this profile."})
+        return JsonResponse({"no_followings": "No user follows this profile."})
     else:
         return JsonResponse([following.serialize() for following in followings], safe=False)
 
-#endregion
+# endregion
 
-#region POST LIKES
+# region POST LIKES
+
+
 @csrf_exempt
 @login_required
-def like_post(request, post_id : int):
+def like_post(request, post_id: int):
 
     # Must be a POST request
     if request.method != "POST":
         return JsonResponse({
             "error": "POST method required.",
         }, status=400)
-    
+
     # If the user is already following, unfollow
-    post_to_like = Post.objects.get(id = post_id)
-    
+    post_to_like = Post.objects.get(id=post_id)
+
     # Check if already likes this post
     try:
-        post_liked = PostLike.objects.get(post = post_to_like, liked_by = request.user)
+        post_liked = PostLike.objects.get(
+            post=post_to_like, liked_by=request.user)
         post_liked.delete()
         return JsonResponse({
-            "unliked" : "User has succesfully unliked this post.",
+            "unliked": "User has succesfully unliked this post.",
         }, status=201)
-    
+
     # If not, like
     except PostLike.DoesNotExist:
         new_like = PostLike(
-            post = post_to_like,
-            liked_by = request.user,
+            post=post_to_like,
+            liked_by=request.user,
         )
         new_like.save()
         return JsonResponse({
-            "liked" : "User has succesfully liked this post.",
+            "liked": "User has succesfully liked this post.",
         }, status=201)
 
+
 def get_post_likes(request, post_id):
-    likes = PostLike.objects.filter(post = post_id)
+    likes = PostLike.objects.filter(post=post_id)
 
     if len(likes) == 0:
-        return JsonResponse({"no_likes" : "This post has no likes."})
+        return JsonResponse({"no_likes": "This post has no likes."})
     else:
         return JsonResponse([like.serialize() for like in likes], safe=False)
 
 
-#endregion
+# endregion

@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
     // Load all posts page
     // document.querySelector("#all-posts").addEventListener('click', () => loadAllPosts);
-    document.querySelector("#all-posts").addEventListener("click", (e) => {loadAllPosts(e, 1)});
+    document.querySelector("#all-posts").addEventListener("click", (e) => { loadAllPosts(e, 1) });
     loadAllPosts(event, 1); // Load first page
     // console.log("Loadding page 1")
 
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 // Load all the posts in the main page
 function loadAllPosts(event, page_number) {
 
-    if(event === "click"){
+    if (event === "click") {
         event.preventDefault();
         console.log("prevenido default!")
     }
@@ -71,12 +71,12 @@ function loadAllPosts(event, page_number) {
                 updatePostLikes(element.id);
 
             });
-            
+
             // Append navigation
             const navigation_links = displayPagination(data.page_info.has_next_page, data.page_info.has_previous_page);
-            
+
             following_view.append(navigation_links);
-            
+
             // Previous page link
             console.log(data.page_info.has_previous_page);
 
@@ -87,7 +87,7 @@ function loadAllPosts(event, page_number) {
                 paginator.getElementsByTagName("a")[0].addEventListener("click", (e) => loadAllPosts(e, page_number - 1));
                 // console.log(`Set Hook to loadAllPost(${page_number - 1})`);
             }
-                
+
             // Next page link
             if (data.page_info.has_next_page === true) {
                 // console.log("Has next page");
@@ -96,7 +96,7 @@ function loadAllPosts(event, page_number) {
             }
 
         });
-    
+
     // Display the all posts page
     showPage('#posts-view');
 
@@ -113,33 +113,33 @@ function loadFollowingPosts() {
 
     // Fetch the posts
     fetch(`posts/following_posts`, { cache: 'reload' })
-    .then(response => {
+        .then(response => {
 
-    // Since is posible that the response is a redirect to login
-    // we evaluate if it's content-type is HTML
-        const contentTypeResponse = response.headers.get('content-type');
+            // Since is posible that the response is a redirect to login
+            // we evaluate if it's content-type is HTML
+            const contentTypeResponse = response.headers.get('content-type');
 
-        if (contentTypeResponse.includes('text/html')) {
-            window.location.href = response.url;
-            return null;
-        }
-        // Else, return the JSON response normally
-        return response.json();
+            if (contentTypeResponse.includes('text/html')) {
+                window.location.href = response.url;
+                return null;
+            }
+            // Else, return the JSON response normally
+            return response.json();
         })
-    .then(data => {
-        
-        if (data.no_posts){
-            console.log("No posts to show.");
+        .then(data => {
 
-        } else {
-            // Add each post to template
-            data.forEach(element => {
-                const loaded_post = createPost(element);
-                following_view.append(loaded_post);
-                updatePostLikes(element.id);
+            if (data.no_posts) {
+                console.log("No posts to show.");
+
+            } else {
+                // Add each post to template
+                data.forEach(element => {
+                    const loaded_post = createPost(element);
+                    following_view.append(loaded_post);
+                    updatePostLikes(element.id);
                 })
-        };
-    });
+            };
+        });
 
     // Display the all posts page
     showPage('#following-view');
@@ -277,39 +277,39 @@ function followUser(event, profileUserId) {
 
     // Prevents default URL #
     event.preventDefault();
-       
+
     fetch(`posts/follow/${profileUserId}`, {
         method: 'POST',
     })
-    .then(response => {
+        .then(response => {
 
-        // Since is posible that the response is a redirect to login
-        // we evaluate if it's content-type is HTML
-        const contentTypeResponse = response.headers.get('content-type');
+            // Since is posible that the response is a redirect to login
+            // we evaluate if it's content-type is HTML
+            const contentTypeResponse = response.headers.get('content-type');
 
-        if (contentTypeResponse.includes('text/html')) {
-            window.location.href = response.url;
-            console.log("Response redirected!");
-            return null;
-        }
-        // Else, return the JSON response normally
-        return response.json();
-    })
-    .then(result => {
-        if (!result) return;
+            if (contentTypeResponse.includes('text/html')) {
+                window.location.href = response.url;
+                console.log("Response redirected!");
+                return null;
+            }
+            // Else, return the JSON response normally
+            return response.json();
+        })
+        .then(result => {
+            if (!result) return;
 
-        if(result.followed){
-            console.log("User is now following.")
-            updateFollowers(profileUserId);
-        }
-        else if (result.unfollowed){
-            console.log("User is no longer following.")
-            updateFollowers(profileUserId);
-        }
-    })
-    .catch(error => {
-        console.log('Error: ', error);
-    });
+            if (result.followed) {
+                console.log("User is now following.")
+                updateFollowers(profileUserId);
+            }
+            else if (result.unfollowed) {
+                console.log("User is no longer following.")
+                updateFollowers(profileUserId);
+            }
+        })
+        .catch(error => {
+            console.log('Error: ', error);
+        });
 
 }
 
@@ -405,79 +405,44 @@ function updateFollowings(profileUserId) {
 
 //#endregion
 
-function displayPagination(hasNext, hasPrev) {
-    
-    const navigation_element = document.createElement('nav');
-    navigation_element.innerHTML = `
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="#">Previous</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-            </li>
-        </ul>
-        `;
-    
-    navigation_element.setAttribute('aria-label', "Pagination");
-    navigation_element.setAttribute('id', "paginator");
-
-    // If has no prev page, disable the button
-    if (!hasPrev) {
-        navigation_element.getElementsByClassName("page-item")[0].setAttribute("tabindex", "-1");
-        navigation_element.getElementsByClassName("page-item")[0].setAttribute("class", "page-item disabled");
-    }
-    // If has no next page, disable the button
-    if (!hasNext) {
-        navigation_element.getElementsByClassName("page-item")[1].setAttribute("tabindex", "-1");
-        navigation_element.getElementsByClassName("page-item")[1].setAttribute("class", "page-item disabled");
-    } 
-
-    return navigation_element;
-
-
-
-
-}
-
 
 //#region LIKING POSTS
 function likePost(event, postToLikeId) {
-    
+
     // Prevents default URL #
     event.preventDefault();
-       
+
     fetch(`posts/like/${postToLikeId}`, {
         method: 'POST',
     })
-    .then(response => {
+        .then(response => {
 
-        // Since is posible that the response is a redirect to login
-        // we evaluate if it's content-type is HTML
-        const contentTypeResponse = response.headers.get('content-type');
+            // Since is posible that the response is a redirect to login
+            // we evaluate if it's content-type is HTML
+            const contentTypeResponse = response.headers.get('content-type');
 
-        if (contentTypeResponse.includes('text/html')) {
-            window.location.href = response.url;
-            return null;
-        }
-        // Else, return the JSON response normally
-        return response.json();
-    })
-    .then(result => {
-        if (!result) return;
+            if (contentTypeResponse.includes('text/html')) {
+                window.location.href = response.url;
+                return null;
+            }
+            // Else, return the JSON response normally
+            return response.json();
+        })
+        .then(result => {
+            if (!result) return;
 
-        if(result.liked){
-            console.log("User now likes this post.");
-            updatePostLikes(postToLikeId);
-        }
-        else if (result.unliked){
-            console.log("User no longer likes this post.");
-            updatePostLikes(postToLikeId);
-        }
-    })
-    .catch(error => {
-        console.log('Error: ', error);
-    });
+            if (result.liked) {
+                console.log("User now likes this post.");
+                updatePostLikes(postToLikeId);
+            }
+            else if (result.unliked) {
+                console.log("User no longer likes this post.");
+                updatePostLikes(postToLikeId);
+            }
+        })
+        .catch(error => {
+            console.log('Error: ', error);
+        });
 }
 
 function updatePostLikes(postId) {
@@ -503,7 +468,7 @@ function updatePostLikes(postId) {
             else {
                 likes.forEach(element => {
                     likesCount++;
-                    if (element.liked_by_id == currentUserId){
+                    if (element.liked_by_id == currentUserId) {
                         userLikesThisPost = true;
                     }
                 })
@@ -512,12 +477,12 @@ function updatePostLikes(postId) {
             const postDivs = document.querySelectorAll(".post-element");
 
             postDivs.forEach(element => {
-                if (element.dataset.postid == String(postId)){
+                if (element.dataset.postid == String(postId)) {
                     element.getElementsByClassName("like-link")[0].innerHTML = String(likesCount);
-                    if (userLikesThisPost){
+                    if (userLikesThisPost) {
                         element.getElementsByTagName("i")[0].setAttribute("style", "color:red;");
                     }
-                    else{
+                    else {
                         element.getElementsByTagName("i")[0].removeAttribute("style");
                     }
                 }
@@ -536,5 +501,37 @@ function showPage(page) {
 
     // Show selected page
     document.querySelector(page).style.display = 'block';
+}
+
+function displayPagination(hasNext, hasPrev) {
+
+    const navigation_element = document.createElement('nav');
+    navigation_element.innerHTML = `
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#">Previous</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+        `;
+
+    navigation_element.setAttribute('aria-label', "Pagination");
+    navigation_element.setAttribute('id', "paginator");
+
+    // If has no prev page, disable the button
+    if (!hasPrev) {
+        navigation_element.getElementsByClassName("page-item")[0].setAttribute("tabindex", "-1");
+        navigation_element.getElementsByClassName("page-item")[0].setAttribute("class", "page-item disabled");
+    }
+    // If has no next page, disable the button
+    if (!hasNext) {
+        navigation_element.getElementsByClassName("page-item")[1].setAttribute("tabindex", "-1");
+        navigation_element.getElementsByClassName("page-item")[1].setAttribute("class", "page-item disabled");
+    }
+
+    return navigation_element;
+
 }
 //#endregion
