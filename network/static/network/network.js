@@ -324,6 +324,17 @@ function createAvatar(username, profileUserId) {
         <a id="follow-link" href="#" class="btn btn-primary" value="${profileUserId}">Follow</a>
     </div>`;
 
+    // Hide "follow" link if it's user's own profile
+    try {
+        const userIdNumber = document.querySelector("#user-profile").value;
+        if (userIdNumber === profileUserId) {
+            profileAvatar.getElementsByTagName("a")[0].style.display = 'none';
+        }
+    }
+    catch (error) {
+        console.log("Error getting user-profile. User not logged in.");
+    }
+
     // Styling
     profileAvatar.setAttribute('id', 'profile-avatar');
     profileAvatar.setAttribute('class', 'card text-center w-75 mb-3');
