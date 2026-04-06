@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
         const userIdNumber = document.querySelector("#user-profile").value;
         // console.log(userIdNumber);
         document.querySelector("#user-profile").addEventListener('click', () => {
-            loadProfile(Number(userIdNumber), 1);
+            loadProfile(event, Number(userIdNumber), 1);
             // history.pushState({id_number : Number(userIdNumber)}, "", `user/${userIdNumber}`);
         });
     }
@@ -165,7 +165,7 @@ function createPost(args) {
 
     // Hooks
     const cardTitleElement = post_element.getElementsByClassName("card-title");
-    cardTitleElement[0].addEventListener('click', () => loadProfile(args.author_id, 1));
+    cardTitleElement[0].addEventListener('click', (event) => loadProfile(event, args.author_id, 1));
 
     const likeLink = post_element.getElementsByClassName("like-link");
     likeLink[0].addEventListener('click', (event) => likePost(event, args.id));
@@ -229,7 +229,12 @@ function newPost(event) {
 
 //#region USER PROFILE
 // Load user profile with it's own posts in reverse chron. 
-function loadProfile(userId, profile_page) {
+function loadProfile(event, userId, profile_page) {
+
+    if (event === 'click') {
+        event.preventDefault();
+    }
+
     const profile_posts = document.querySelector('#profile-posts');
     const profile_avatar = document.querySelector('#profile-avatar');
 
@@ -243,9 +248,6 @@ function loadProfile(userId, profile_page) {
     fetch(`posts/${userId}/${profile_page}`, { cache: 'reload' })
         .then(response => response.json())
         .then(data => {
-
-            // Log the posts [DEBUG]
-            // console.log(posts);
 
             // If there are no posts
             if (data.no_posts) {
@@ -412,8 +414,6 @@ function updateFollowings(profileUserId) {
             document.querySelector("#following").innerHTML = String(followingCount);
         });
 }
-
-
 //#endregion
 
 
