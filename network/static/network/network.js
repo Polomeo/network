@@ -72,27 +72,22 @@ function loadAllPosts(event, page_number) {
 
             });
 
-            // Append navigation
-            const navigation_links = displayPagination(data.page_info.has_next_page, data.page_info.has_previous_page);
+            // --- Append navigation
+            const navigationElementId = "all-posts-navigation"
+            const navigation_links = displayPagination(navigationElementId ,data.page_info.has_next_page, data.page_info.has_previous_page);
 
             following_view.append(navigation_links);
 
+            const paginator = document.getElementById(navigationElementId);
+
             // Previous page link
-            console.log(data.page_info.has_previous_page);
-
-            const paginator = document.getElementById("paginator");
-
             if (data.page_info.has_previous_page === true) {
-                // console.log("Has previous page");
                 paginator.getElementsByTagName("a")[0].addEventListener("click", (e) => loadAllPosts(e, page_number - 1));
-                // console.log(`Set Hook to loadAllPost(${page_number - 1})`);
             }
 
             // Next page link
             if (data.page_info.has_next_page === true) {
-                // console.log("Has next page");
                 paginator.getElementsByTagName("a")[1].addEventListener("click", (e) => loadAllPosts(e, page_number + 1));
-                // console.log(`Set Hook to loadAllPost(${page_number + 1})`);
             }
 
         });
@@ -214,7 +209,7 @@ function newPost(event) {
             else {
                 console.log('Result: ', result);
                 // Reloads all posts
-                loadAllPosts();
+                loadAllPosts(event, 1);
                 // Hide the form
                 toggleNewPostForm(false);
                 // Set the post body blank
@@ -231,7 +226,7 @@ function newPost(event) {
 // Load user profile with it's own posts in reverse chron. 
 function loadProfile(event, userId, profile_page) {
 
-    if (event === 'click') {
+    if (event == 'click') {
         event.preventDefault();
     }
 
@@ -269,7 +264,23 @@ function loadProfile(event, userId, profile_page) {
                 updatePostLikes(element.id);
             });
 
-            // TODO: Add Pagination (same as loadAllPosts)
+            // Append navigation
+            const navigationElementId = "profile-posts-navigation"
+            const navigation_links = displayPagination(navigationElementId, data.page_info.has_next_page, data.page_info.has_previous_page);
+            profile_posts.append(navigation_links);
+
+            const paginator = document.getElementById(navigationElementId);
+
+            // Previous page link
+            if (data.page_info.has_previous_page) {
+                paginator.getElementsByTagName("a")[0].addEventListener("click", (e) => loadProfile(e, userId, profile_page - 1));
+            }
+
+            // Next page link
+            if (data.page_info.has_next_page) {
+                paginator.getElementsByTagName("a")[1].addEventListener("click", (e) => loadProfile(e, userId, profile_page + 1));
+            }
+
         });
 
     // Display profile page
@@ -516,7 +527,7 @@ function showPage(page) {
     document.querySelector(page).style.display = 'block';
 }
 
-function displayPagination(hasNext, hasPrev) {
+function displayPagination(paginatorElementId, hasNext, hasPrev) {
 
     const navigation_element = document.createElement('nav');
     navigation_element.innerHTML = `
@@ -531,7 +542,7 @@ function displayPagination(hasNext, hasPrev) {
         `;
 
     navigation_element.setAttribute('aria-label', "Pagination");
-    navigation_element.setAttribute('id', "paginator");
+    navigation_element.setAttribute('id', paginatorElementId);
 
     // If has no prev page, disable the button
     if (!hasPrev) {
