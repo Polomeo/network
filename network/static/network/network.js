@@ -73,7 +73,7 @@ function loadAllPosts(event, page_number) {
 
             // --- Append navigation
             const navigationElementId = "all-posts-navigation"
-            const navigation_links = displayPagination(navigationElementId ,data.page_info.has_next_page, data.page_info.has_previous_page);
+            const navigation_links = displayPagination(navigationElementId, data.page_info.has_next_page, data.page_info.has_previous_page);
 
             following_view.append(navigation_links);
 
@@ -101,11 +101,11 @@ function loadAllPosts(event, page_number) {
 }
 
 function loadFollowingPosts(event, page_number) {
-    
+
     if (event == "click") {
         event.preventDefault();
     }
-    
+
     const following_view = document.querySelector('#following-view');
 
     following_view.innerHTML = "<h3>Following posts</h3>";
@@ -127,12 +127,15 @@ function loadFollowingPosts(event, page_number) {
         })
         .then(data => {
 
+            console.log(data.page_info);
+            console.log(data.page_body);
+
             if (data.no_posts) {
                 console.log("No posts to show.");
 
             } else {
                 // Add each post to template
-                data.forEach(element => {
+                data.page_body.forEach(element => {
                     const loaded_post = createPost(element);
                     following_view.append(loaded_post);
                     updatePostLikes(element.id);

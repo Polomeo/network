@@ -84,10 +84,6 @@ def load_posts(request, page: int):
     paginator = Paginator(posts, PAGINATOR_PAGES)  # 10 post per page
     page_results = paginator.get_page(page)
 
-    # Post page serialization
-    # page_body = []
-    # page_body = [post.serialize() for post in page_results]
-
     page_info = {
         "current_page": page,
         "has_next_page": page_results.has_next(),
@@ -128,16 +124,27 @@ def load_following_posts(request, page_number):
 
     # Get the profiles that the user follows
     following = Follower.objects.filter(followed_by=request.user)
-   
+
     # Get the posts made by those profiles
     following_users = [following_obj.user for following_obj in following]
     following_posts = Post.objects.filter(author__in=following_users)
+    posts = following_posts.order_by("-created_at").all()
+
+    # Paginate posts
+    paginator = Paginator(posts, PAGINATOR_PAGES)  # 10 post per page
+    page_results = paginator.get_page(page_number)
+
+    page_info = {
+        "current_page": page_number,
+        "has_next_page": page_results.has_next(),
+        "has_previous_page": page_results.has_previous(),
+    }
 
     if len(following_posts) == 0:
         return JsonResponse({"no_posts": "There are not posts here. Try following some profiles!"}, status=200)
     else:
-        posts = following_posts.order_by("-created_at").all()
-        return JsonResponse([post.serialize() for post in posts], safe=False)
+        return JsonResponse({"page_body": [post.serialize() for post in page_results.object_list],
+                             "page_info": page_info}, safe=False)
 
 
 @csrf_exempt
