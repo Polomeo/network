@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
     // Following posts link
     try {
-        document.querySelector("#following-posts").addEventListener('click', loadFollowingPosts);
+        document.querySelector("#following-posts").addEventListener('click', (e) => { loadFollowingPosts(e, 1) });
         // console.log("[DEBUG] Hook to #following-posts done.");
     }
     catch (error) {
@@ -47,9 +47,8 @@ document.addEventListener('DOMContentLoaded', function (event) {
 // Load all the posts in the main page
 function loadAllPosts(event, page_number) {
 
-    if (event === "click") {
+    if (event == "click") {
         event.preventDefault();
-        console.log("prevenido default!")
     }
 
     const following_view = document.querySelector('#posts-view');
@@ -101,13 +100,18 @@ function loadAllPosts(event, page_number) {
 
 }
 
-function loadFollowingPosts() {
+function loadFollowingPosts(event, page_number) {
+    
+    if (event == "click") {
+        event.preventDefault();
+    }
+    
     const following_view = document.querySelector('#following-view');
 
     following_view.innerHTML = "<h3>Following posts</h3>";
 
     // Fetch the posts
-    fetch(`posts/following_posts`, { cache: 'reload' })
+    fetch(`posts/following_posts/${page_number}`, { cache: 'reload' })
         .then(response => {
 
             // Since is posible that the response is a redirect to login
@@ -139,8 +143,6 @@ function loadFollowingPosts() {
     // Display the all posts page
     showPage('#following-view');
 
-    // Display the new post form
-    // document.querySelector("#compose-view").style.display = 'block';
 }
 
 // Returns a div element for a post in the database
@@ -428,7 +430,6 @@ function updateFollowings(profileUserId) {
         });
 }
 //#endregion
-
 
 //#region LIKING POSTS
 function likePost(event, postToLikeId) {

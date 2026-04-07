@@ -124,10 +124,11 @@ def load_user_posts(request, user_id: int, page: int):
 
 
 @login_required
-def load_following_posts(request):
+def load_following_posts(request, page_number):
 
     # Get the profiles that the user follows
     following = Follower.objects.filter(followed_by=request.user)
+   
     # Get the posts made by those profiles
     following_users = [following_obj.user for following_obj in following]
     following_posts = Post.objects.filter(author__in=following_users)
