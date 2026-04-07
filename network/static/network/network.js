@@ -77,12 +77,12 @@ function loadAllPosts(event, page_number) {
             const paginator = document.getElementById(navigationElementId);
 
             // Previous page link
-            if (data.page_info.has_previous_page === true) {
+            if (data.page_info.has_previous_page) {
                 paginator.getElementsByTagName("a")[0].addEventListener("click", (e) => loadAllPosts(e, page_number - 1));
             }
 
             // Next page link
-            if (data.page_info.has_next_page === true) {
+            if (data.page_info.has_next_page) {
                 paginator.getElementsByTagName("a")[1].addEventListener("click", (e) => loadAllPosts(e, page_number + 1));
             }
 
@@ -497,7 +497,7 @@ function updatePostLikes(postId) {
         currentUserId = Number(currentUserIdValue);
     }
     catch (error) {
-        console.log("User not logged in.");
+        // console.log("User not logged in.");
     }
 
     fetch(`posts/get_likes/${postId}`, { cache: 'reload' })
@@ -532,7 +532,7 @@ function updatePostLikes(postId) {
 }
 //#endregion
 
-//#region UTILITARY FUNCTIONS
+//#region UTILITARY FUNCTIONS 
 function showPage(page) {
     // Hide all pages
     document.querySelector('#compose-view').style.display = 'none';
