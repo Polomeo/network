@@ -60,9 +60,6 @@ function loadAllPosts(event, page_number) {
         .then(response => response.json())
         .then(data => {
 
-            // console.log(data.page_info);
-            // console.log(data.page_body);
-
             // Add each post to template
             data.page_body.forEach(element => {
                 const loaded_post = createPost(element);
@@ -127,9 +124,6 @@ function loadFollowingPosts(event, page_number) {
         })
         .then(data => {
 
-            console.log(data.page_info);
-            console.log(data.page_body);
-
             if (data.no_posts) {
                 console.log("No posts to show.");
 
@@ -140,6 +134,25 @@ function loadFollowingPosts(event, page_number) {
                     following_view.append(loaded_post);
                     updatePostLikes(element.id);
                 })
+
+                // --- Append navigation
+                const navigationElementId = "following-navigation"
+                const navigation_links = displayPagination(navigationElementId, data.page_info.has_next_page, data.page_info.has_previous_page);
+
+                following_view.append(navigation_links);
+
+                const paginator = document.getElementById(navigationElementId);
+
+                // Previous page link
+                if (data.page_info.has_previous_page) {
+                    paginator.getElementsByTagName("a")[0].addEventListener("click", (e) => loadFollowingPosts(e, page_number - 1));
+                }
+
+                // Next page link
+                if (data.page_info.has_next_page) {
+                    paginator.getElementsByTagName("a")[1].addEventListener("click", (e) => loadFollowingPosts(e, page_number + 1));
+                }
+
             };
         });
 
