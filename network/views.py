@@ -166,6 +166,12 @@ def new_post(request):
 
     return JsonResponse({"message": "Post created successfully."}, status=201)
 
+
+@csrf_exempt
+@login_required
+def edit_post(request, post_id):
+    pass
+
 # endregion
 
 # region FOLLOWERS
