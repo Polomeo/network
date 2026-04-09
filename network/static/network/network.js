@@ -1,3 +1,6 @@
+// TODO: Add global user ID
+// TODO: Replace if (event === 'click') to if (event.type === 'click) in all ocurrences
+
 document.addEventListener('DOMContentLoaded', function (event) {
     // Navigation Buttons
     // At first, the user won't be logged in, so this avoids a crashing error of Null
@@ -45,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 // Load all the posts in the main page
 function loadAllPosts(event, page_number) {
 
-    if (event == "click") {
+    if (event === "click") {
         event.preventDefault();
     }
 
@@ -160,30 +163,30 @@ function loadFollowingPosts(event, page_number) {
 }
 
 // Returns a div element for a post in the database
-function createPost(args) {
+function createPost(postInfo) {
 
     const post_element = document.createElement('div');
     post_element.innerHTML = `<div class="card-body">
-            <h5 class="card-title">${args.author}</h5>
+            <h5 class="card-title">${postInfo.author}</h5>
             <a class="edit-link" href="#">Edit post</a>
-            <h6 class="card-subtitle mb-3 text-muted">${args.created_at}</h6>
-            <p class="card-text">${args.body}</p>
+            <h6 class="card-subtitle mb-3 text-muted">${postInfo.created_at}</h6>
+            <p class="card-text">${postInfo.body}</p>
             <i class="bi bi-heart"></i> <a href="#" class="like-link">0</a>
             </div>`;
 
     // Styling
     post_element.setAttribute('class', 'card mb-3 post-element');
-    post_element.setAttribute('data-postid', String(args.id));
-    post_element.setAttribute('data-authorid', String(args.author_id));
+    post_element.setAttribute('data-postid', String(postInfo.id));
+    post_element.setAttribute('data-authorid', String(postInfo.author_id));
 
     // --- Hooks ---
     // Author profile link
     const cardTitleElement = post_element.getElementsByClassName("card-title");
-    cardTitleElement[0].addEventListener('click', (event) => loadProfile(event, args.author_id, 1));
+    cardTitleElement[0].addEventListener('click', (event) => loadProfile(event, postInfo.author_id, 1));
 
     // Like post link
     const likeLink = post_element.getElementsByClassName("like-link");
-    likeLink[0].addEventListener('click', (event) => likePost(event, args.id));
+    likeLink[0].addEventListener('click', (event) => likePost(event, postInfo.id));
 
     // Edit post link
     const editPostLink = post_element.getElementsByClassName("edit-link");
@@ -194,13 +197,13 @@ function createPost(args) {
 
         // If current user is post author, show edit link
         // and add hook to edit
-        if (userIdNumber === args.author_id) {
+        if (userIdNumber === postInfo.author_id) {
             editPostLink[0].style.display = 'block';
-            editPostLink[0].addEventListener('click', (event) => editPost(event, args));
+            editPostLink[0].addEventListener('click', (event) => editPost(event, postInfo));
         }
     }
     catch (error) {
-        console.log("Error getting user-profile. User not logged in.");
+        // console.log("createPost(): Error getting user-profile. User not logged in.");
     }
 
 
@@ -212,11 +215,14 @@ function createPost(args) {
 //#region EDITING POSTS
 
 function editPost(event, postInfo) {
-    if (event == 'click') {
+
+    if (event.type === 'click') {
         event.preventDefault();
+        console.log("editPost(): default Prevented.");
     }
 
     console.log(`Edit post ID: ${postInfo.id} (${postInfo.body})`);
+
 }
 
 //#endregion
