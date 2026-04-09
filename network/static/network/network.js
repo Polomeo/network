@@ -236,7 +236,9 @@ function toggleEditPostForm(event, postInfo) {
 
 function editPost(event, postInfo) {
     // call the API with fetch
-    // toggle the edit post form in the form
+    
+    // After sending toggle the edit post form in the form 
+    // and update the body with the new text
 }
 
 //#endregion
