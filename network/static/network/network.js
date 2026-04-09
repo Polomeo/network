@@ -1,5 +1,6 @@
 // TODO: Add global user ID
 // TODO: Replace if (event === 'click') to if (event.type === 'click) in all ocurrences
+// TODO: Responsive CSS for avatar in profile
 
 document.addEventListener('DOMContentLoaded', function (event) {
     // Navigation Buttons
@@ -199,7 +200,7 @@ function createPost(postInfo) {
         // and add hook to edit
         if (userIdNumber === postInfo.author_id) {
             editPostLink[0].style.display = 'block';
-            editPostLink[0].addEventListener('click', (event) => editPost(event, postInfo));
+            editPostLink[0].addEventListener('click', (event) => toggleEditPostForm(event, postInfo));
         }
     }
     catch (error) {
@@ -214,15 +215,28 @@ function createPost(postInfo) {
 
 //#region EDITING POSTS
 
-function editPost(event, postInfo) {
+function toggleEditPostForm(event, postInfo) {
 
     if (event.type === 'click') {
         event.preventDefault();
-        console.log("editPost(): default Prevented.");
+        // console.log("editPost(): default Prevented.");
     }
+    
+    // GET THE POST
+
+    // HIDE THE BODY
+
+    // SHOW THE textarea AND THE accept / cancel BUTTONS
+
+    // HOOKS FOR BUTTONS
 
     console.log(`Edit post ID: ${postInfo.id} (${postInfo.body})`);
 
+}
+
+function editPost(event, postInfo) {
+    // call the API with fetch
+    // toggle the edit post form in the form
 }
 
 //#endregion
