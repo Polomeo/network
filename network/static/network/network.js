@@ -6,12 +6,10 @@ document.addEventListener('DOMContentLoaded', function (event) {
         // console.log(userIdNumber);
         document.querySelector("#user-profile").addEventListener('click', () => {
             loadProfile(event, Number(userIdNumber), 1);
-            // history.pushState({id_number : Number(userIdNumber)}, "", `user/${userIdNumber}`);
         });
     }
     catch (error) {
         console.log("Error getting user-profile. User not logged in.");
-        //console.error(error);
     }
 
     // New post form
@@ -167,25 +165,60 @@ function createPost(args) {
     const post_element = document.createElement('div');
     post_element.innerHTML = `<div class="card-body">
             <h5 class="card-title">${args.author}</h5>
-            <a href="#">Edit post</a>
+            <a class="edit-link" href="#">Edit post</a>
             <h6 class="card-subtitle mb-3 text-muted">${args.created_at}</h6>
             <p class="card-text">${args.body}</p>
             <i class="bi bi-heart"></i> <a href="#" class="like-link">0</a>
             </div>`;
+
     // Styling
     post_element.setAttribute('class', 'card mb-3 post-element');
     post_element.setAttribute('data-postid', String(args.id));
+    post_element.setAttribute('data-authorid', String(args.author_id));
 
-    // Hooks
+    // --- Hooks ---
+    // Author profile link
     const cardTitleElement = post_element.getElementsByClassName("card-title");
     cardTitleElement[0].addEventListener('click', (event) => loadProfile(event, args.author_id, 1));
 
+    // Like post link
     const likeLink = post_element.getElementsByClassName("like-link");
     likeLink[0].addEventListener('click', (event) => likePost(event, args.id));
+
+    // Edit post link
+    const editPostLink = post_element.getElementsByClassName("edit-link");
+    editPostLink[0].style.display = 'none'; // Starts hidden
+
+    try {
+        const userIdNumber = document.querySelector("#user-profile").value;
+
+        // If current user is post author, show edit link
+        // and add hook to edit
+        if (userIdNumber === args.author_id) {
+            editPostLink[0].style.display = 'block';
+            editPostLink[0].addEventListener('click', (event) => editPost(event, args));
+        }
+    }
+    catch (error) {
+        console.log("Error getting user-profile. User not logged in.");
+    }
+
 
     return post_element;
 
 }
+//#endregion
+
+//#region EDITING POSTS
+
+function editPost(event, postInfo) {
+    if (event == 'click') {
+        event.preventDefault();
+    }
+
+    console.log(`Edit post ID: ${postInfo.id} (${postInfo.body})`);
+}
+
 //#endregion
 
 //#region CREATING POSTS
