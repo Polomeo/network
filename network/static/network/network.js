@@ -230,23 +230,37 @@ function toggleEditPostForm(event, postInfo, visible) {
 
         if (element.dataset.postid === String(postInfo.id)) {
             if (visible) {
-
+                // console.log(`Edit post ID: ${postInfo.id} (${postInfo.body})`);
                 const postEditForm = document.createElement('div');
                 postEditForm.innerHTML = `
                 <div class="post-edit-form">
-                    <textarea name="post-edit-area" rows="2">${postInfo.body}</textarea>
+                    <form class="post-edit-form">
+                        <textarea class="form-control" >${postInfo.body}</textarea>
+                        <input type="submit" class="btn btn-primary" style="margin-top:10px;">
+                        <button type="button" class="btn btn-secondary" style="margin-top:10px;">Cancel</button>
+                    </form>
                 </div>
                 `;
 
-                console.log(`Edit post ID: ${postInfo.id} (${postInfo.body})`);
-                // HIDE THE BODY
+                // Hide the post body
                 element.getElementsByClassName("card-body")[0].style.display = 'none';
+
+                // Hooks for edit buttons
+                postEditForm.getElementsByTagName("button")[0].addEventListener('click', (e) => { toggleEditPostForm(e, postInfo, false) });
+
                 // SHOW THE textarea AND THE accept / cancel BUTTONS
                 element.appendChild(postEditForm);
-                // HOOKS FOR BUTTONS
             }
             else {
-
+                try {
+                    // Hide the edit form
+                    element.getElementsByClassName("post-edit-form")[0].style.display = 'none';
+                    // Show the post body
+                    element.getElementsByClassName("card-body")[0].style.display = 'block';
+                }
+                catch (error) {
+                    console.log(`The post ${postInfo.id} is not being edited.`);
+                }
             }
 
 
@@ -273,12 +287,12 @@ function toggleNewPostForm(visible) {
     if (visible) {
         document.querySelector("#new-post-button").style.display = 'none';
         document.querySelector("#new-post-form").style.display = 'block';
-        console.log("New post form visible");
+        //console.log("New post form visible");
     }
     else {
         document.querySelector("#new-post-button").style.display = 'block';
         document.querySelector("#new-post-form").style.display = 'none';
-        console.log("New post form invisible");
+        //console.log("New post form invisible");
     }
 }
 
