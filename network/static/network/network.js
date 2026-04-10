@@ -224,7 +224,7 @@ function toggleEditPostForm(event, postInfo, visible) {
         // console.log("editPost(): default Prevented.");
     }
 
-    // GET THE POST
+    // Get the post
     const postDivs = document.querySelectorAll(".post-element");
     postDivs.forEach(element => {
 
@@ -245,8 +245,12 @@ function toggleEditPostForm(event, postInfo, visible) {
                 // Hide the post body
                 element.getElementsByClassName("card-body")[0].style.display = 'none';
 
-                // Hooks for edit buttons
+                // Cancel button
                 postEditForm.getElementsByTagName("button")[0].addEventListener('click', (e) => { toggleEditPostForm(e, postInfo, false) });
+
+                // Send button
+                postEditForm.getElementsByTagName("input")[0].addEventListener('click', (e) => { editPost(e, postInfo, element) });
+
 
                 // SHOW THE textarea AND THE accept / cancel BUTTONS
                 element.appendChild(postEditForm);
@@ -263,8 +267,6 @@ function toggleEditPostForm(event, postInfo, visible) {
                 }
             }
 
-
-
         }
     });
 
@@ -272,7 +274,17 @@ function toggleEditPostForm(event, postInfo, visible) {
 
 }
 
-function editPost(event, postInfo) {
+function editPost(event, postInfo, postElement) {
+
+    event.preventDefault();
+
+    let newPostInfo = postInfo;
+    newPostInfo.body = postElement.getElementsByTagName("textarea")[0].value.toString();
+
+    console.log(`editPost(): Request to edit sent succesfully. newPostInfo: id = ${newPostInfo.id} body = ${newPostInfo.body} author = ${newPostInfo.author}`);
+
+    toggleEditPostForm(event, postInfo, false);
+
     // call the API with fetch
 
     // After sending toggle the edit post form in the form 
