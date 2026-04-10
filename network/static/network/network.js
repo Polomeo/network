@@ -167,13 +167,15 @@ function loadFollowingPosts(event, page_number) {
 function createPost(postInfo) {
 
     const post_element = document.createElement('div');
-    post_element.innerHTML = `<div class="card-body">
-            <h5 class="card-title">${postInfo.author}</h5>
-            <a class="edit-link" href="#">Edit post</a>
-            <h6 class="card-subtitle mb-3 text-muted">${postInfo.created_at}</h6>
-            <p class="card-text">${postInfo.body}</p>
-            <i class="bi bi-heart"></i> <a href="#" class="like-link">0</a>
-            </div>`;
+    post_element.innerHTML = `
+            <div class="card-body">
+                <h5 class="card-title">${postInfo.author}</h5>
+                <a class="edit-link" href="#">Edit post</a>
+                <h6 class="card-subtitle mb-3 text-muted">${postInfo.created_at}</h6>
+                <p class="card-text">${postInfo.body}</p>
+                <i class="bi bi-heart"></i> <a href="#" class="like-link">0</a>
+            </div>
+            `;
 
     // Styling
     post_element.setAttribute('class', 'card mb-3 post-element');
@@ -225,16 +227,29 @@ function toggleEditPostForm(event, postInfo, visible) {
     // GET THE POST
     const postDivs = document.querySelectorAll(".post-element");
     postDivs.forEach(element => {
-        console.log(`element.dataset.postid = ${element.dataset.postid} - postInfo.id = ${postInfo.id})`);
+
         if (element.dataset.postid === String(postInfo.id)) {
             if (visible) {
+
+                const postEditForm = document.createElement('div');
+                postEditForm.innerHTML = `
+                <div class="post-edit-form">
+                    <textarea name="post-edit-area" rows="2">${postInfo.body}</textarea>
+                </div>
+                `;
+
                 console.log(`Edit post ID: ${postInfo.id} (${postInfo.body})`);
+                // HIDE THE BODY
+                element.getElementsByClassName("card-body")[0].style.display = 'none';
+                // SHOW THE textarea AND THE accept / cancel BUTTONS
+                element.appendChild(postEditForm);
+                // HOOKS FOR BUTTONS
             }
-            // HIDE THE BODY
+            else {
 
-            // SHOW THE textarea AND THE accept / cancel BUTTONS
+            }
 
-            // HOOKS FOR BUTTONS
+
 
         }
     });
