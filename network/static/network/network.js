@@ -200,7 +200,7 @@ function createPost(postInfo) {
         // and add hook to edit
         if (userIdNumber === postInfo.author_id) {
             editPostLink[0].style.display = 'block';
-            editPostLink[0].addEventListener('click', (event) => toggleEditPostForm(event, postInfo));
+            editPostLink[0].addEventListener('click', (event) => toggleEditPostForm(event, postInfo, true));
         }
     }
     catch (error) {
@@ -215,28 +215,37 @@ function createPost(postInfo) {
 
 //#region EDITING POSTS
 
-function toggleEditPostForm(event, postInfo) {
+function toggleEditPostForm(event, postInfo, visible) {
 
     if (event.type === 'click') {
         event.preventDefault();
         // console.log("editPost(): default Prevented.");
     }
-    
+
     // GET THE POST
+    const postDivs = document.querySelectorAll(".post-element");
+    postDivs.forEach(element => {
+        console.log(`element.dataset.postid = ${element.dataset.postid} - postInfo.id = ${postInfo.id})`);
+        if (element.dataset.postid === String(postInfo.id)) {
+            if (visible) {
+                console.log(`Edit post ID: ${postInfo.id} (${postInfo.body})`);
+            }
+            // HIDE THE BODY
 
-    // HIDE THE BODY
+            // SHOW THE textarea AND THE accept / cancel BUTTONS
 
-    // SHOW THE textarea AND THE accept / cancel BUTTONS
+            // HOOKS FOR BUTTONS
 
-    // HOOKS FOR BUTTONS
+        }
+    });
 
-    console.log(`Edit post ID: ${postInfo.id} (${postInfo.body})`);
+
 
 }
 
 function editPost(event, postInfo) {
     // call the API with fetch
-    
+
     // After sending toggle the edit post form in the form 
     // and update the body with the new text
 }
