@@ -1,3 +1,5 @@
+// FIX: Unlogged users can see the follow button on profiles
+
 // TODO: Add global user ID
 // TODO: Replace if (event === 'click') to if (event.type === 'click) in all ocurrences
 // TODO: Responsive CSS for avatar in profile
