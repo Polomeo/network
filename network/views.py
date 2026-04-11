@@ -181,6 +181,11 @@ def edit_post(request):
 
     # Get and edit the post    
     post_to_edit = Post.objects.get(id=post_id)
+
+    # Reject edit if user is not author
+    if post_to_edit.author_id != request.user.id:
+        return JsonResponse({"error" : "User is not the author"}, status=400)
+
     post_to_edit.body = post_new_body
     post_to_edit.edited = True
 
