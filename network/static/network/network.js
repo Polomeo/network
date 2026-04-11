@@ -266,7 +266,6 @@ function toggleEditPostForm(event, postInfo, visible) {
                     console.log(`The post ${postInfo.id} is not being edited.`);
                 }
             }
-
         }
     });
 
@@ -283,12 +282,36 @@ function editPost(event, postInfo, postElement) {
 
     console.log(`editPost(): Request to edit sent succesfully. newPostInfo: id = ${newPostInfo.id} body = ${newPostInfo.body} author = ${newPostInfo.author}`);
 
-    toggleEditPostForm(event, postInfo, false);
-
+    
     // call the API with fetch
+    // Try to send the post
+    fetch('/posts/edit', {
+        method: 'POST',
+        body: JSON.stringify({
+            postId : newPostInfo.id,
+            postBody: newPostInfo.body,
+        })
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.error){
+            console.log(result.error);
+        }
+        else {
+            // Load the post with the new info
+            postElement.querySelector(".card-text").innerHTML = newPostInfo.body
+            
+            // And toggle the edit post form in the form
+            toggleEditPostForm(event, newPostInfo, false);
+        }
 
-    // After sending toggle the edit post form in the form 
-    // and update the body with the new text
+    })
+    .catch(error => {
+            console.log('Error: ', error);
+    });
+    
+    
+    
 }
 
 //#endregion

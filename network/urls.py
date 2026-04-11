@@ -24,5 +24,5 @@ urlpatterns = [
          views.get_post_likes, name="post-likes"),
     path("posts/following_posts/<int:page_number>",
          views.load_following_posts, name="following-posts"),
-    path("posts/edit/<int:post_id>", views.edit_post, name="edit-post"),
+    path("posts/edit", views.edit_post, name="edit-post"),
 ]

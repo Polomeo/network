@@ -169,8 +169,24 @@ def new_post(request):
 
 @csrf_exempt
 @login_required
-def edit_post(request, post_id):
-    pass
+def edit_post(request):
+    # Updating a post must be done via POST
+    if request.method != "POST":
+        return JsonResponse({"error" : "POST request required to edit"}, status=400)
+
+    # Get the sent data from request
+    data = json.loads(request.body)
+    post_new_body = data.get("postBody", "")
+    post_id = int(data.get("postId", ""))
+
+    # Get and edit the post    
+    post_to_edit = Post.objects.get(id=post_id)
+    post_to_edit.body = post_new_body
+    post_to_edit.edited = True
+
+    # Save the post and send the response
+    post_to_edit.save()
+    return JsonResponse({"message": "Post edited successfully."}, status=201)
 
 # endregion
 
