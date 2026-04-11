@@ -166,12 +166,18 @@ function loadFollowingPosts(event, page_number) {
 // Returns a div element for a post in the database
 function createPost(postInfo) {
 
+    // Show "edited" text if the post had been edited
+    let editedMessage = '';
+    if (postInfo.edited){
+        editedMessage = ' - <i>Edited</i>';
+    }
+
     const post_element = document.createElement('div');
     post_element.innerHTML = `
             <div class="card-body">
                 <h5 class="card-title">${postInfo.author}</h5>
                 <a class="edit-link" href="#">Edit post</a>
-                <h6 class="card-subtitle mb-3 text-muted">${postInfo.created_at}</h6>
+                <h6 class="card-subtitle mb-3 text-muted">${postInfo.created_at}${editedMessage}</h6>
                 <p class="card-text">${postInfo.body}</p>
                 <i class="bi bi-heart"></i> <a href="#" class="like-link">0</a>
             </div>
