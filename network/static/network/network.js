@@ -1,5 +1,3 @@
-// TODO: Responsive CSS for avatar in profile
-
 document.addEventListener('DOMContentLoaded', function (event) {
     // Navigation Buttons
     // At first, the user won't be logged in, so this avoids a crashing error of Null
@@ -655,7 +653,7 @@ function updatePostLikes(postId) {
                 if (element.dataset.postid == String(postId)) {
                     element.getElementsByClassName("like-link")[0].innerHTML = String(likesCount);
                     if (userLikesThisPost) {
-                        element.getElementsByTagName("i")[0].setAttribute("style", "color:red;");
+                        element.getElementsByClassName("bi")[0].setAttribute("style", "color:red;");
                     }
                     else {
                         element.getElementsByTagName("i")[0].removeAttribute("style");
