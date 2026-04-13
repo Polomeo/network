@@ -1,4 +1,3 @@
-// TODO: Replace if (event === 'click') to if (event.type === 'click) in all ocurrences
 // TODO: Responsive CSS for avatar in profile
 
 document.addEventListener('DOMContentLoaded', function (event) {
