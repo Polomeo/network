@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 // Load all the posts in the main page
 function loadAllPosts(event, page_number) {
 
-    if (event === "click") {
+    if (event.type === "click") {
         event.preventDefault();
     }
 
@@ -100,7 +100,7 @@ function loadAllPosts(event, page_number) {
 
 function loadFollowingPosts(event, page_number) {
 
-    if (event == "click") {
+    if (event.type === "click") {
         event.preventDefault();
     }
 
@@ -377,7 +377,7 @@ function newPost(event) {
 // Load user profile with it's own posts in reverse chron. 
 function loadProfile(event, userId, profile_page) {
 
-    if (event == 'click') {
+    if (event.type === 'click') {
         event.preventDefault();
     }
 
