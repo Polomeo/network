@@ -1,6 +1,3 @@
-// FIX: Unlogged users can see the follow button on profiles
-
-// TODO: Add global user ID
 // TODO: Replace if (event === 'click') to if (event.type === 'click) in all ocurrences
 // TODO: Responsive CSS for avatar in profile
 
@@ -501,7 +498,9 @@ function createAvatar(username, profileUserId) {
         }
     }
     catch (error) {
-        console.log("Error getting user-profile. User not logged in.");
+        // This hides the follow button if user is not logged in
+        // console.log("Error getting user-profile. User not logged in.");
+        profileAvatar.getElementsByTagName("a")[0].style.display = 'none';
     }
 
     // Styling
